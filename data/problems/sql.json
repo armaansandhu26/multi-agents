@@ -1,0 +1,23 @@
+[
+  {
+    "id": "spider_hard_01",
+    "source": "Spider-style (curated)",
+    "db_id": "network_1",
+    "difficulty_note": "Hard — multi-join + filter + aggregation.",
+    "prompt": "Database schema (SQLite):\n\nTable Highschooler(ID, name, grade)\nTable Friend(student_id, friend_id)\nTable Likes(student_id, liked_id)\n\nQuestion: Find the names of students who have at least 2 friends and also have at least 1 person they like. Return each qualifying student's name."
+  },
+  {
+    "id": "spider_hard_02",
+    "source": "Spider-style (curated)",
+    "db_id": "employee_hire_evaluation",
+    "difficulty_note": "Hard — join + group-by + having + subquery.",
+    "prompt": "Database schema (SQLite):\n\nTable employee(Employee_ID, Name, Age, City)\nTable shop(Shop_ID, Name, Location, District, Number_products, Manager_name)\nTable hiring(Shop_ID, Employee_ID, Start_year, Is_full_time)\nTable evaluation(Employee_ID, Year_awarded, Bonus)\n\nQuestion: Which shops employ more full-time workers than the average number of full-time workers per shop? Return shop name and full-time employee count."
+  },
+  {
+    "id": "spider_hard_03",
+    "source": "Spider-style (curated)",
+    "db_id": "student_transcripts_tracking",
+    "difficulty_note": "Hard — nested aggregation across multiple joins.",
+    "prompt": "Database schema (SQLite):\n\nTable Students(student_id, first_name, last_name, email_address, date_first_registered, date_left, other_details)\nTable Student_Enrolment(student_enrolment_id, student_id, semester_id, degree_program_id, other_details)\nTable Student_Enrolment_Courses(student_course_id, course_id, student_enrolment_id)\nTable Courses(course_id, course_name, course_description, other_details)\nTable Semesters(semester_id, semester_name, semester_description, other_details)\n\nQuestion: Find the first name and last name of the student who enrolled in the most courses. If there is a tie, return all tied students."
+  }
+]

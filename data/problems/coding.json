@@ -1,0 +1,20 @@
+[
+  {
+    "id": "HumanEval/43",
+    "source": "HumanEval",
+    "difficulty_note": "Medium-hard — set lookup; calibrate with baseline.",
+    "prompt": "Write a Python function:\n\nfrom typing import List\n\n\ndef pairs_sum_to_zero(l: List[int]) -> bool:\n    \"\"\"Return True if there are two distinct elements in the list that sum to zero.\n    >>> pairs_sum_to_zero([1, 3, 5, 0])\n    False\n    >>> pairs_sum_to_zero([2, 4, -5, 3, 5, 7])\n    True\n    >>> pairs_sum_to_zero([1])\n    False\n    \"\"\"\n"
+  },
+  {
+    "id": "HumanEval/54",
+    "source": "HumanEval",
+    "difficulty_note": "Medium-hard — multiset character matching with frequency.",
+    "prompt": "Write a Python function:\n\n\ndef same_chars(s0: str, s1: str) -> bool:\n    \"\"\"Check if two strings contain the same characters with the same counts (order may differ).\n    >>> same_chars('eabcdzzzz', 'dddzzzzzzzddeddabc')\n    True\n    >>> same_chars('abcd', 'dddddddabc')\n    True\n    >>> same_chars('eabcd', 'dddddddabc')\n    False\n    >>> same_chars('eabcdzzzz', 'dddzzzzzzzddddabc')\n    False\n    \"\"\"\n"
+  },
+  {
+    "id": "HumanEval/65",
+    "source": "HumanEval",
+    "difficulty_note": "Medium-hard — circular shift edge cases.",
+    "prompt": "Write a Python function:\n\n\ndef circular_shift(x: str, shift: int) -> str:\n    \"\"\"Circularly shift the digits of integer string x to the right by shift positions.\n    If shift > number of digits, return the digits reversed.\n    >>> circular_shift('12', 1)\n    '21'\n    >>> circular_shift('12', 2)\n    '12'\n    >>> circular_shift('12345', 2)\n    '45123'\n    \"\"\"\n"
+  }
+]
