@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import random
+import re
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -17,24 +18,28 @@ from src.agents import (
     Agent,
     agent_instructions,
     domain_agent_for_task,
+    discussion_turn_prompt,
+    final_answer_prompt,
+    moderator_label,
+    moderator_history_context,
+    moderator_score_context,
     pitch_prompt_for,
     volunteer_prompt_for,
 )
 from src.client import generate_response, make_client
 from src.config import Settings
+from src.execution_grading import GradeResult, grade_solution
 from src.rewards import (
-    GRADER_INSTRUCTIONS,
     RewardConfig,
     ScoreBoard,
     format_reward_message,
-    parse_grade,
 )
 
 TaskType = Literal["coding", "sql"]
 Condition = Literal["A", "B", "C"]
 StarterMode = Literal["pitch", "volunteer", "random", "alternate", "code", "sql"]
 TiebreakMode = Literal["random", "domain", "continuity"]
-TurnKind = Literal["problem", "volunteer", "pitch", "selection", "reward", "agent"]
+TurnKind = Literal["problem", "volunteer", "pitch", "selection", "reward", "agent", "final"]
 
 TURNS_PER_PROBLEM = 6
 PROBLEMS_PER_TASK = 3
@@ -82,17 +87,19 @@ class ExperimentRun:
         }
 
 
-def build_problem_schedule(condition: Condition) -> list[ProblemSlot]:
+def build_problem_schedule(
+    condition: Condition, problems_per_task: int = PROBLEMS_PER_TASK
+) -> list[ProblemSlot]:
     if condition == "A":
-        slots = [ProblemSlot("coding", i) for i in range(PROBLEMS_PER_TASK)]
-        slots += [ProblemSlot("sql", i) for i in range(PROBLEMS_PER_TASK)]
+        slots = [ProblemSlot("coding", i) for i in range(problems_per_task)]
+        slots += [ProblemSlot("sql", i) for i in range(problems_per_task)]
         return slots
     if condition == "B":
-        slots = [ProblemSlot("sql", i) for i in range(PROBLEMS_PER_TASK)]
-        slots += [ProblemSlot("coding", i) for i in range(PROBLEMS_PER_TASK)]
+        slots = [ProblemSlot("sql", i) for i in range(problems_per_task)]
+        slots += [ProblemSlot("coding", i) for i in range(problems_per_task)]
         return slots
     schedule: list[ProblemSlot] = []
-    for i in range(PROBLEMS_PER_TASK):
+    for i in range(problems_per_task):
         schedule.append(ProblemSlot("coding", i))
         schedule.append(ProblemSlot("sql", i))
     return schedule
@@ -104,10 +111,13 @@ def task_order_label(condition: Condition, schedule: list[ProblemSlot]) -> list[
     return [slot.task for slot in schedule]
 
 
-def load_problems(task: TaskType) -> list[dict]:
+def load_problems(task: TaskType, *, tier: str | None = None) -> list[dict]:
     path = Path(__file__).resolve().parents[1] / "data" / "problems" / f"{task}.json"
     with path.open() as f:
-        return json.load(f)
+        problems = json.load(f)
+    if tier:
+        problems = [p for p in problems if p.get("tier") == tier]
+    return problems
 
 
 def format_problem_message(problem: dict, *, prefix: str | None = None) -> str:
@@ -130,7 +140,10 @@ def build_agent_input(transcript: list[Turn], agent_id: str) -> list[dict]:
                 {
                     "type": "message",
                     "role": "user",
-                    "content": f"[{turn.kind.title()} — {turn.agent_id}]: {turn.content}",
+                    "content": (
+                        f"[{turn.kind.title()} — {moderator_label(turn.agent_id)}]: "
+                        f"{turn.content}"
+                    ),
                 }
             )
             continue
@@ -154,15 +167,65 @@ def parse_volunteer_choice(response: str) -> bool:
     return "LEAD" in first_line and "DEFER" not in first_line
 
 
+def parse_pitch_bid(response: str) -> dict:
+    """Extract structured bid metadata from the pitch response."""
+    bid: str | None = None
+    confidence: int | None = None
+    claim: str | None = None
+
+    for line in response.splitlines():
+        stripped = line.strip()
+        upper = stripped.upper()
+        if upper.startswith("BID:"):
+            value = stripped.split(":", 1)[1].strip().upper()
+            if value.startswith("LEAD"):
+                bid = "LEAD"
+            elif value.startswith("DEFER"):
+                bid = "DEFER"
+        elif upper.startswith("CONFIDENCE:"):
+            value = stripped.split(":", 1)[1]
+            match = re.search(r"\d+", value)
+            if match:
+                confidence = max(0, min(100, int(match.group(0))))
+        elif upper.startswith("CLAIM:"):
+            claim = stripped.split(":", 1)[1].strip()
+
+    if bid is None:
+        first_line = response.strip().splitlines()[0].upper() if response.strip() else ""
+        if "DEFER" in first_line and "LEAD" not in first_line:
+            bid = "DEFER"
+        elif "LEAD" in first_line:
+            bid = "LEAD"
+
+    return {
+        "bid": bid or "UNKNOWN",
+        "wants_lead": bid == "LEAD",
+        "confidence": confidence,
+        "claim": claim,
+    }
+
+
 def parse_moderator_choice(response: str) -> str:
+    label_to_agent = {
+        "agent_alpha": AGENT_C_ID,
+        "agent_beta": AGENT_S_ID,
+        "code_expert": AGENT_C_ID,
+        "sql_expert": AGENT_S_ID,
+    }
     for line in response.splitlines():
         line_lower = line.lower()
         if "leader" in line_lower:
-            if "sql_expert" in line_lower:
-                return AGENT_S_ID
-            if "code_expert" in line_lower:
-                return AGENT_C_ID
+            match = re.search(
+                r"leader\s*:\s*(agent_alpha|agent_beta|code_expert|sql_expert)",
+                line_lower,
+            )
+            if match:
+                return label_to_agent[match.group(1)]
     lower = response.lower()
+    alpha_pos = lower.rfind("agent_alpha")
+    beta_pos = lower.rfind("agent_beta")
+    if alpha_pos != -1 or beta_pos != -1:
+        return AGENT_S_ID if beta_pos > alpha_pos else AGENT_C_ID
     if "sql_expert" in lower and "code_expert" not in lower:
         return AGENT_S_ID
     if "sql_expert" in lower and "code_expert" in lower:
@@ -183,13 +246,13 @@ def select_starter_from_volunteers(
     s_wants = volunteers[AGENT_S_ID]
 
     if c_wants and not s_wants:
-        return AGENT_C_ID, "only_code_expert_volunteered"
+        return AGENT_C_ID, "only_agent_alpha_volunteered"
     if s_wants and not c_wants:
-        return AGENT_S_ID, "only_sql_expert_volunteered"
+        return AGENT_S_ID, "only_agent_beta_volunteered"
 
     if c_wants and s_wants:
         if tiebreak == "domain":
-            return domain_agent, "both_volunteered_domain_expert_leads"
+            return domain_agent, "both_volunteered_task_aligned_agent_leads"
         if tiebreak == "continuity" and previous_starter is not None:
             return previous_starter, "both_volunteered_previous_leader_leads"
         chosen = rng.choice([AGENT_C_ID, AGENT_S_ID])
@@ -201,29 +264,26 @@ def select_starter_from_volunteers(
     return domain_agent, "fallback"
 
 
-def grade_problem(
+def request_final_answer(
     client,
     settings: Settings,
-    problem: dict,
-    discussion_turns: list[Turn],
-) -> tuple[bool, str]:
-    if not discussion_turns:
-        return False, "No discussion turns to grade."
-
-    solution_text = "\n\n---\n\n".join(
-        f"[{t.agent_id}]: {t.content}" for t in discussion_turns if t.kind == "agent"
+    leader: Agent,
+    transcript: list[Turn],
+    task: TaskType,
+    scores: dict[str, float],
+    reward_history: list[dict],
+) -> str:
+    """The leader compiles the team's final solution after the discussion."""
+    messages = build_agent_input(transcript, leader.agent_id)
+    messages.append(
+        {"type": "message", "role": "user", "content": final_answer_prompt(task)}
     )
-    grader_input = (
-        f"Problem ({problem['id']}):\n{problem['prompt']}\n\n"
-        f"Team discussion excerpt:\n{solution_text[-12000:]}"
-    )
-    response = generate_response(
+    return generate_response(
         client,
         settings,
-        instructions=GRADER_INSTRUCTIONS,
-        input_messages=[{"type": "message", "role": "user", "content": grader_input}],
+        instructions=agent_instructions(leader, scores, reward_history),
+        input_messages=messages,
     )
-    return parse_grade(response), response
 
 
 def request_pitch(
@@ -233,6 +293,7 @@ def request_pitch(
     transcript: list[Turn],
     task: TaskType,
     scores: dict[str, float],
+    reward_history: list[dict],
 ) -> str:
     messages = build_agent_input(transcript, agent.agent_id)
     messages.append(
@@ -241,7 +302,7 @@ def request_pitch(
     return generate_response(
         client,
         settings,
-        instructions=agent_instructions(agent, scores),
+        instructions=agent_instructions(agent, scores, reward_history),
         input_messages=messages,
     )
 
@@ -252,14 +313,14 @@ def run_moderator_selection(
     problem: dict,
     pitches: dict[str, str],
     scores: dict[str, float],
+    reward_history: list[dict],
 ) -> tuple[str, str]:
-    from src.agents import score_context
-
     moderator_input = (
         f"Problem ({problem['id']}):\n{problem['prompt']}\n\n"
-        f"{score_context(scores)}\n\n"
-        f"Pitch from {AGENT_C_ID}:\n{pitches[AGENT_C_ID]}\n\n"
-        f"Pitch from {AGENT_S_ID}:\n{pitches[AGENT_S_ID]}"
+        f"{moderator_score_context(scores)}\n\n"
+        f"{moderator_history_context(reward_history)}\n\n"
+        f"Pitch from {moderator_label(AGENT_C_ID)}:\n{pitches[AGENT_C_ID]}\n\n"
+        f"Pitch from {moderator_label(AGENT_S_ID)}:\n{pitches[AGENT_S_ID]}"
     )
     response = generate_response(
         client,
@@ -281,13 +342,18 @@ def run_pitch_phase(
     problem_index: int,
     global_turn_index: int,
     scores: dict[str, float],
+    reward_history: list[dict],
 ) -> tuple[str, str, list[Turn], int, dict]:
     phase_turns: list[Turn] = []
     pitches: dict[str, str] = {}
+    pitch_bids: dict[str, dict] = {}
 
     for agent in (AGENT_C, AGENT_S):
-        response = request_pitch(client, settings, agent, transcript, task, scores)
+        response = request_pitch(
+            client, settings, agent, transcript, task, scores, reward_history
+        )
         pitches[agent.agent_id] = response
+        pitch_bids[agent.agent_id] = parse_pitch_bid(response)
         phase_turns.append(
             Turn(
                 turn_index=global_turn_index,
@@ -301,14 +367,16 @@ def run_pitch_phase(
         global_turn_index += 1
 
     leader, moderator_response = run_moderator_selection(
-        client, settings, problem, pitches, scores
+        client, settings, problem, pitches, scores, reward_history
     )
     follower = AGENT_S_ID if leader == AGENT_C_ID else AGENT_C_ID
 
     selection_text = (
         f"Moderator selection for {problem['id']}:\n{moderator_response.strip()}\n\n"
-        f"{leader} will open the discussion. {follower} follows.\n"
-        f"Leader earns +0.5 extra on team success but -0.5 on team failure."
+        f"{moderator_label(leader)} will open the discussion. "
+        f"{moderator_label(follower)} follows.\n"
+        "Leader earns +3.0 on team success but -2.0 on team failure; "
+        "follower earns +1.0 on team success and 0 on team failure."
     )
     phase_turns.append(
         Turn(
@@ -324,6 +392,7 @@ def run_pitch_phase(
 
     meta = {
         "pitches": pitches,
+        "pitch_bids": pitch_bids,
         "moderator_response": moderator_response,
         "starter_agent_id": leader,
         "follower_agent_id": follower,
@@ -339,6 +408,7 @@ def request_volunteer(
     transcript: list[Turn],
     task: TaskType,
     scores: dict[str, float],
+    reward_history: list[dict],
 ) -> str:
     messages = build_agent_input(transcript, agent.agent_id)
     messages.append(
@@ -347,7 +417,7 @@ def request_volunteer(
     return generate_response(
         client,
         settings,
-        instructions=agent_instructions(agent, scores),
+        instructions=agent_instructions(agent, scores, reward_history),
         input_messages=messages,
     )
 
@@ -362,6 +432,7 @@ def run_volunteer_phase(
     global_turn_index: int,
     rng: random.Random,
     scores: dict[str, float],
+    reward_history: list[dict],
     tiebreak: TiebreakMode = "random",
     previous_starter: str | None = None,
 ) -> tuple[str, str, list[Turn], int, dict]:
@@ -370,7 +441,9 @@ def run_volunteer_phase(
     wants_lead: dict[str, bool] = {}
 
     for agent in (AGENT_C, AGENT_S):
-        response = request_volunteer(client, settings, agent, transcript, task, scores)
+        response = request_volunteer(
+            client, settings, agent, transcript, task, scores, reward_history
+        )
         wants_lead[agent.agent_id] = parse_volunteer_choice(response)
         bids[agent.agent_id] = response
         volunteer_turns.append(
@@ -391,9 +464,9 @@ def run_volunteer_phase(
     follower = AGENT_S_ID if starter == AGENT_C_ID else AGENT_C_ID
     selection_text = (
         f"Volunteer phase complete.\n"
-        f"- {AGENT_C_ID}: {'LEAD' if wants_lead[AGENT_C_ID] else 'DEFER'}\n"
-        f"- {AGENT_S_ID}: {'LEAD' if wants_lead[AGENT_S_ID] else 'DEFER'}\n"
-        f"{starter} will open the discussion ({reason})."
+        f"- {moderator_label(AGENT_C_ID)}: {'LEAD' if wants_lead[AGENT_C_ID] else 'DEFER'}\n"
+        f"- {moderator_label(AGENT_S_ID)}: {'LEAD' if wants_lead[AGENT_S_ID] else 'DEFER'}\n"
+        f"{moderator_label(starter)} will open the discussion ({reason})."
     )
     volunteer_turns.append(
         Turn(
@@ -449,9 +522,21 @@ def run_experiment(
     tiebreak: TiebreakMode = "random",
     seed: int | None = None,
     reward_config: RewardConfig | None = None,
+    problems_per_task: int = PROBLEMS_PER_TASK,
+    problem_tier: str | None = None,
 ) -> ExperimentRun:
-    schedule = build_problem_schedule(condition)
+    schedule = build_problem_schedule(condition, problems_per_task)
     total_problems = len(schedule)
+
+    # Same seed -> same problem sample across conditions A/B/C (comparable sessions).
+    problem_rng = random.Random(seed)
+    selected_problems: dict[TaskType, list[dict]] = {}
+    for task_name in ("coding", "sql"):
+        bank = load_problems(task_name, tier=problem_tier)  # type: ignore[arg-type]
+        if problems_per_task >= len(bank):
+            selected_problems[task_name] = bank
+        else:
+            selected_problems[task_name] = problem_rng.sample(bank, problems_per_task)
     preset_starters = (
         choose_problem_starters(num_problems=total_problems, mode=starter_mode, seed=seed)
         if starter_mode not in ("volunteer", "pitch")
@@ -476,8 +561,15 @@ def run_experiment(
             "starter_mode": starter_mode,
             "tiebreak": tiebreak,
             "seed": seed,
+            "grader": "execution",
+            "problems_per_task": problems_per_task,
+            "problem_tier": problem_tier,
             "reward_config": asdict(reward_config),
             "problem_schedule": [asdict(slot) for slot in schedule],
+            "problem_ids": {
+                task_name: [p["id"] for p in problems]
+                for task_name, problems in selected_problems.items()
+            },
             "problem_starters": starter_plan,
             "scoreboard": scoreboard.to_dict(),
         },
@@ -493,8 +585,7 @@ def run_experiment(
     for slot in schedule:
         task = slot.task
         problem_idx = slot.problem_index
-        problems = load_problems(task)
-        problem = problems[problem_idx]
+        problem = selected_problems[task][problem_idx]
         problem_discussion: list[Turn] = []
 
         prefix = None
@@ -525,6 +616,7 @@ def run_experiment(
                     problem_index=problem_idx,
                     global_turn_index=global_turn_index,
                     scores=scores,
+                    reward_history=scoreboard.history,
                 )
             )
             transcript.extend(phase_turns)
@@ -547,6 +639,7 @@ def run_experiment(
                     global_turn_index=global_turn_index,
                     rng=rng,
                     scores=scores,
+                    reward_history=scoreboard.history,
                     tiebreak=tiebreak,
                     previous_starter=previous_starter,
                 )
@@ -583,8 +676,19 @@ def run_experiment(
             response_text = generate_response(
                 client,
                 settings,
-                instructions=agent_instructions(agent, scores),
-                input_messages=build_agent_input(transcript, speaker_id),
+                instructions=agent_instructions(agent, scores, scoreboard.history),
+                input_messages=[
+                    *build_agent_input(transcript, speaker_id),
+                    {
+                        "type": "message",
+                        "role": "user",
+                        "content": discussion_turn_prompt(
+                            task=task,
+                            turn_in_problem=turn_in_problem,
+                            is_leader=speaker_id == starter_agent_id,
+                        ),
+                    },
+                ],
             )
 
             turn = Turn(
@@ -601,19 +705,47 @@ def run_experiment(
             global_turn_index += 1
 
         if starter_mode == "pitch":
-            passed, grade_response = grade_problem(
-                client, settings, problem, problem_discussion
+            leader_agent = AGENT_C if starter_agent_id == AGENT_C_ID else AGENT_S
+            final_text = request_final_answer(
+                client,
+                settings,
+                leader_agent,
+                transcript,
+                task,
+                scores,
+                scoreboard.history,
             )
+            final_turn = Turn(
+                turn_index=global_turn_index,
+                task=task,
+                problem_index=problem_idx,
+                agent_id=starter_agent_id,
+                content=final_text,
+                kind="final",
+            )
+            transcript.append(final_turn)
+            global_turn_index += 1
+
+            grade: GradeResult = grade_solution(problem, task, final_text)
             reward_record = scoreboard.apply(
                 leader=starter_agent_id,
                 follower=follower_agent_id,
-                passed=passed,
+                passed=grade.passed,
                 config=reward_config,
                 problem_id=problem["id"],
             )
-            reward_record["grade_response"] = grade_response
-            starter_plan[-1]["passed"] = passed
-            starter_plan[-1]["grade_response"] = grade_response
+            reward_record["grade_detail"] = grade.detail
+            if "pitch_bids" in starter_plan[-1]:
+                reward_record["leader_bid"] = starter_plan[-1]["pitch_bids"].get(
+                    starter_agent_id, {}
+                )
+                reward_record["follower_bid"] = starter_plan[-1]["pitch_bids"].get(
+                    follower_agent_id, {}
+                )
+            starter_plan[-1]["passed"] = grade.passed
+            starter_plan[-1]["grade_detail"] = grade.detail
+            starter_plan[-1]["final_solution"] = final_text
+            starter_plan[-1]["extracted_solution"] = grade.extracted_solution
             starter_plan[-1]["reward"] = reward_record
 
             reward_turn = Turn(

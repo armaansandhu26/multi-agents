@@ -7,6 +7,8 @@ Inspired by the **anchor–absorber** framework from:
 > Parfenova, Denzler & Pfeffer (2025). *Emergent Convergence in Multi-Agent LLM Annotation.* BlackboxNLP 2025.  
 > [PDF](https://aclanthology.org/2025.blackboxnlp-1.12.pdf)
 
+> **Current status:** Phases 1–2 were infrastructure smoke tests; their results are not trustworthy (old lexical influence metric, no control conditions, rewards that never fired). **See [NEXT_STEPS.md](NEXT_STEPS.md) for the Phase 3 plan.** Steps 1–2 are implemented and calibrated: grading is now **execution-based** (HumanEval + Spider), problem banks verify offline, and balanced calibrated batteries exist (**8 coding + 8 SQL**, ~48–50% solo pass). The primary anchoring metric is now **solution provenance**. The current harness masks agent labels as `agent_alpha` / `agent_beta` in moderator/system-visible text and tells agents not to reveal private expertise framing. Next: run a small calibrated Phase 3 pilot, then implement the random-leader and framing controls.
+
 ---
 
 ## Hypotheses
@@ -85,7 +87,7 @@ python scripts/manipulation_check.py runs/run_A_20260601T175321Z.json
 
 ---
 
-## Phase 2 — Pitch / moderator / rewards (current protocol)
+## Phase 2 — Pitch / moderator / rewards pilot
 
 **Status: one replicate complete (A, B, C @ seed 42).** See [known limitations](#known-limitations--planned-fixes) before treating as main results.
 
@@ -97,8 +99,9 @@ python scripts/manipulation_check.py runs/run_A_20260601T175321Z.json
 | 2 | Both **pitch** privately (moderator has not seen partner's pitch) |
 | 3 | **Moderator** selects leader from pitches |
 | 4 | 6-turn discussion (leader opens, strict alternation) |
-| 5 | **Grader**: PASS / FAIL on final solution |
-| 6 | **Rewards** applied; scores updated in transcript |
+| 5 | **Leader submits final solution** (single fenced code block) |
+| 6 | **Execution grading**: HumanEval tests / SQL fixture comparison → PASS / FAIL |
+| 7 | **Rewards** applied; scores updated in transcript |
 
 ### Conditions
 
@@ -108,7 +111,7 @@ python scripts/manipulation_check.py runs/run_A_20260601T175321Z.json
 | **B** | 3 SQL → 3 coding (blocked) |
 | **C** | coding, sql, coding, sql, … (interleaved) |
 
-### Reward rules
+### Phase 2 pilot reward rules (historical)
 
 | Outcome | Leader | Follower |
 |---|---|---|
@@ -116,6 +119,50 @@ python scripts/manipulation_check.py runs/run_A_20260601T175321Z.json
 | Team **fails** | −0.5 | 0 |
 
 Both agents see each other's scores (competitive leaderboard dynamic).
+
+### Current calibrated harness changes
+
+The current harness keeps the same pitch → moderator → discussion → final-answer flow, but the pitch and reward protocol is stronger:
+
+| Field | Meaning |
+|---|---|
+| `BID: LEAD or DEFER` | Agents can explicitly ask to lead or decline leadership |
+| `CONFIDENCE: 0-100` | Self-reported confidence for calibration/bluff analysis |
+| `CLAIM:` | Public competence claim; agents may strategically overclaim or bluff |
+| `APPROACH:` | Concrete solution plan and risks |
+
+Current reward pressure:
+
+| Outcome | Leader | Follower |
+|---|---|---|
+| Team **passes** | +3.0 | +1.0 |
+| Team **fails** | −2.0 | 0 |
+
+Only the leader can earn the large success bonus, but only the leader is penalized on failure.
+
+The current harness also shows recent calibration history before each pitch: who led, whether the team passed, the leader's bid/confidence when available, and the score change. The moderator sees the same history with masked labels, and should make a recent high-confidence failed leader give a stronger current reason to lead again without banning recovery attempts.
+
+### Current calibrated pilot note (seed 45, pre-caution update)
+
+A matched A/B/C pilot was run with `--seed 45 --problem-tier calibrated --problems-per-task 3` before the leader-failure penalty changed from `-1.0` to `-2.0` and before recent-calibration context was added:
+
+| Condition | Run file | Final scores |
+|---|---|---|
+| A | [`run_A_20260627T123014Z.json`](runs/run_A_20260627T123014Z.json) | code 3.0 / sql 11.0 |
+| B | [`run_B_20260627T123333Z.json`](runs/run_B_20260627T123333Z.json) | code 4.0 / sql 10.0 |
+| C | [`run_C_20260627T123652Z.json`](runs/run_C_20260627T123652Z.json) | code 11.0 / sql 3.0 |
+
+Behavior artifacts:
+- CSV: [`behavior_seed45.csv`](runs/behavior_seed45.csv)
+- Dashboard: [`behavior_seed45.html`](runs/views/behavior_seed45.html)
+
+Early bidding pattern:
+- 36 total agent bids: 31 `LEAD`, 5 `DEFER`
+- All 5 `DEFER` bids came from the less-aligned agent for that task
+- Defers had lower confidence (61-78%), but usually did not follow failure
+- After same-agent leader failure, the next bid was still `LEAD` 6/6 times, average confidence about 95%
+
+Interpretation for now: this pilot shows leadership pressure and strategic overclaiming/bluffing, but little evidence yet of post-failure caution. Treat this as an early pattern, not a final result.
 
 ### Phase 2 runs (seed 42)
 
@@ -140,18 +187,18 @@ Analysis sidecars: `runs/run_*_analysis.json`
 - **C**: no flip — S dominant across both task types
 
 **Pitch behavior**
-- Both agents still pitch to **lead** on most problems (~4/6 off-domain pitches argued for lead)
-- Off-domain deferral is prose-only (“I should not lead…”) — no structured `DEFER` bid like volunteer mode
-- Over-bidding is rational: losing the pitch still yields +1.0 on team success; penalty only hits a failed **leader**
+- In the original Phase 2 pilot, both agents still pitched to **lead** on most problems (~4/6 off-domain pitches argued for lead)
+- Deferral was prose-only (“I should not lead…”) — no structured `DEFER` bid like volunteer mode
+- The current harness fixes this with structured `BID: LEAD or DEFER`, `CONFIDENCE`, and `CLAIM` lines, while allowing strategic public competence claims/bluffing
 
 **Moderator “domain knowledge”**
 - Moderator does **not** see agent system prompts (expertise framing)
-- It **does** see: problem text (Python vs SQL), agent IDs (`code_expert` / `sql_expert`), and instructions to pick by “domain fit”
-- Rationales like *“sql_expert has stronger domain fit for SQL aggregation”* come from names + problem type, not the manipulation
+- In the original Phase 2 pilot it **did** see: problem text (Python vs SQL), agent IDs (`code_expert` / `sql_expert`), and instructions to pick by “domain fit”
+- Current harness masks system-visible labels as `agent_alpha` / `agent_beta` and removes partner-background hints from agent prompts; old pilot rationales like *“sql_expert has stronger domain fit for SQL aggregation”* came from names + problem type, not the manipulation
 
 ### Phase 2 research questions
 
-1. **Caution** — do agents pitch deferral on off-domain problems when failure costs the leader −0.5?
+1. **Caution** — do agents pitch deferral on high-risk or less-aligned problems when failure costs the leader −2.0?
 2. **Cooperation vs sabotage** — after losing the pitch, does the follower help (team PASS) or undermine?
 3. **Anchor takeover** — does one agent's pitch strengthen and win moderator selection across domains over time?
 
@@ -159,36 +206,57 @@ Analysis sidecars: `runs/run_*_analysis.json`
 
 ### Known limitations & planned fixes
 
-| Issue | Why it matters | Planned fix |
+| Issue | Why it matters | Status |
 |---|---|---|
-| **LLM grader, 100% PASS** | Leader −0.5 never fires; rewards are decorative | Execution grading (HumanEval tests, SQL fixtures) |
-| **Problems too easy** | Solo baseline ~6/6; teams always succeed | Calibrate to ~60–80% solo pass before main battery |
-| **Moderator sees `code_expert` / `sql_expert`** | Selection ≈ domain-matching rule | Blind labels (`agent_alpha` / `agent_beta`) |
-| **Pitch prompt always “bid to lead”** | Both compete to lead; deferral is optional prose | Structured `LEAD` / `DEFER` bids (like volunteer mode) |
-| **No cost to over-bidding** | Safe to pitch lead off-domain and let moderator decide | Optional penalty for off-domain LEAD bids |
+| **LLM grader, 100% PASS** | Leader −0.5 never fires; rewards are decorative | **FIXED** — execution grading (`src/execution_grading.py`) |
+| **Problems too easy** | Solo baseline ~6/6; teams always succeed | **FIXED for Phase 3 prep** — banks expanded to 164 HumanEval + 1034 Spider; calibrated batteries are 8+8 in the 40–70% solo pass band |
+| **Moderator sees `code_expert` / `sql_expert`** | Selection ≈ domain-matching rule | **PARTIAL FIX** — system-visible labels now use `agent_alpha` / `agent_beta`, partner-background hints are removed, and agents are told not to reveal private framing; full no-framing/swapped-framing controls still pending |
+| **Pitch prompt always “bid to lead”** | Both compete to lead; deferral is optional prose | **FIXED for current harness** — structured `BID: LEAD/DEFER`, confidence, public claim, and approach |
+| **Weak pressure to lead** | +0.5 leadership bonus was mild; following was comfortable | **UPDATED** — leader success +3.0, follower success +1.0, leader failure −2.0 plus recent-calibration context |
+| **No way to measure bluffing** | Claims were unstructured prose | **PARTIAL FIX** — public `CLAIM` line is stored in `pitch_bids`; post-run bluff/leak analysis still pending |
+| **Lexical influence metric** | Measures topical overlap/echoing, not influence | **FIXED** — provenance is primary (`src/provenance.py`); lexical kept as labeled legacy signal |
 
-### How to run Phase 2
+### How to run the current calibrated harness
 
 ```bash
 source .venv/bin/activate
 
-# Recommended starting point
-python scripts/run_experiment.py --condition C --seed 42
+# 0. First-time/rebuild only: import problem banks (both tag tier=candidate)
+python scripts/import_humaneval.py
+python scripts/import_spider.py
 
-# Blocked conditions (task-order comparison)
-python scripts/run_experiment.py --condition A --seed 42
-python scripts/run_experiment.py --condition B --seed 42
+# 1. Verify banks offline
+python scripts/verify_problems.py
 
-# Analysis
-python scripts/analyze_run.py runs/run_C_20260601T184655Z.json
-python scripts/manipulation_check.py runs/run_C_20260601T184655Z.json
-python scripts/view_run.py runs/run_C_20260601T184655Z.json --open
+# 2. Reproduce calibration if needed (already done in this workspace)
+python scripts/run_baseline.py --task coding --tier candidate --attempts 5
+python scripts/run_baseline.py --task sql --tier candidate --attempts 5
+python scripts/run_baseline.py --report-only
+python scripts/select_calibrated_problems.py --balance
+
+# 3. Run a calibrated pilot (same seed = same sampled problems across A/B/C)
+python scripts/run_experiment.py --condition C --seed 42 --problem-tier calibrated --problems-per-task 3
+python scripts/run_experiment.py --condition A --seed 42 --problem-tier calibrated --problems-per-task 3
+python scripts/run_experiment.py --condition B --seed 42 --problem-tier calibrated --problems-per-task 3
+
+# 4. Analysis (provenance is the primary anchoring measure)
+python scripts/analyze_run.py runs/run_C_<timestamp>.json
+python scripts/stance_analysis.py runs/run_C_<timestamp>.json   # LLM stance labels
+python scripts/manipulation_check.py runs/run_C_<timestamp>.json
+python scripts/behavior_analysis.py runs/run_C_<timestamp>.json --csv runs/behavior_rows.csv
+python scripts/plot_behavior.py runs/run_C_<timestamp>.json --output runs/views/behavior_<timestamp>.html
+python scripts/view_run.py runs/run_C_<timestamp>.json --open
+
+# 5. Validate metrics against your own judgment
+python scripts/label_anchors.py runs/run_C_<timestamp>.json              # label
+python scripts/label_anchors.py runs/run_C_<timestamp>.json --agreement  # compare
 ```
 
-Phase 2 runs are saved as `runs/run_{A|B|C}_{timestamp}.json` with metadata fields:
+Current harness runs are saved as `runs/run_{A|B|C}_{timestamp}.json` with metadata fields:
 - `starter_mode: "pitch"`
 - `scoreboard` — cumulative scores and per-problem reward history
 - `problem_starters` — pitches, moderator choice, PASS/FAIL, reward deltas
+- `problem_tier: "calibrated"` — when using the balanced Phase 3 battery
 
 ### Legacy modes (Phase 1 reproduction only)
 
@@ -225,42 +293,75 @@ python scripts/run_baseline.py
 
 ```
 src/
-  config.py         # reads .env
-  client.py         # Foundry Responses API wrapper
-  agents.py         # prompts, moderator, pitch text
-  experiment.py     # conversation loop + pitch/reward phases
-  rewards.py        # scoring, grading, reward messages
-  metrics.py        # anchor-absorber influence (I(A→B))
+  config.py             # reads .env
+  client.py             # Foundry Responses API wrapper
+  agents.py             # prompts, moderator, pitch + final-answer text
+  experiment.py         # conversation loop + pitch/final-answer/reward phases
+  rewards.py            # scoring + reward messages
+  execution_grading.py  # sandboxed HumanEval tests + SQL fixture comparison
+  provenance.py         # PRIMARY metric: final solution vs first proposals
+  metrics.py            # LEGACY lexical influence (secondary signal only)
 data/problems/
-  coding.json       # HumanEval/43, 54, 65
-  sql.json          # spider_hard_01–03
+  coding.json           # HumanEval (164 candidates; built by import_humaneval.py)
+  coding_legacy.json    # backup of pre-import 33-problem bank
+  coding_calibrated.json # 8-problem in-band battery after baseline (generated)
+  sql.json              # Spider dev set (1034 candidates; built by import_spider.py)
+  sql_legacy.json       # backup of hand-written bank (pre-Spider)
+  sql_calibrated.json   # 8-problem in-band battery after baseline (generated)
+  sql_fixtures.json     # legacy in-memory fixtures (sql_legacy only)
 scripts/
   smoke_test.py
-  run_baseline.py
+  verify_problems.py    # offline bank verification
+  import_humaneval.py   # import HumanEval + build data/problems/coding.json
+  import_spider.py      # download Spider + build data/problems/sql.json
+  select_calibrated_problems.py  # pick 40-70% band; --balance matches battery sizes
+  build_sql_bank.py     # legacy hand-written SQL bank builder
+  run_baseline.py       # solo difficulty calibration (execution-graded)
   run_experiment.py
-  analyze_run.py
+  analyze_run.py        # provenance + legacy influence
+  behavior_analysis.py  # bid/confidence/claim/pass-fail behavior analysis
+  plot_behavior.py      # HTML/SVG dashboard for bidding/confidence behavior
+  stance_analysis.py    # LLM judge: PROPOSE/CRITIQUE/CONCEDE/... per turn
+  label_anchors.py      # human labeling + metric agreement report
   manipulation_check.py
-  view_run.py       # chat-style HTML viewer for a run
-runs/               # output JSON (gitignored)
-  views/            # generated HTML from view_run.py
+  view_run.py           # chat-style HTML viewer for a run
+runs/                   # output JSON (gitignored)
+  views/                # generated HTML from view_run.py
 ```
 
 ## Metrics reference
 
-**`analyze_run.py`** — influence / anchoring
-- `I(code_expert → sql_expert)` — TF-IDF cosine between adjacent turns
-- Anchor vs absorber scores; task-boundary flip check (H1)
+**`analyze_run.py`** — anchoring
+- **Solution provenance (PRIMARY)**: similarity of the final graded solution to each agent's first proposal (TF-IDF cosine with real IDF + token-sequence ratio). Per-problem winner, per-task anchor, flip check (H1). Requires current-harness runs with final-answer turns.
+- **Legacy lexical influence (secondary)**: `I(A → B)` term-frequency cosine between adjacent turns. Measures topical overlap/echoing — do not interpret as influence on its own.
+
+**`stance_analysis.py`** — stance dynamics (LLM judge)
+- Labels each turn PROPOSE / REVISE_OWN / CRITIQUE / CONCEDE / SUPPORT / RESTATE
+- Concession rate + assertiveness per agent per task; stance anchor
+
+**`label_anchors.py`** — metric validation
+- Interactive human labeling of who anchored each problem
+- `--agreement`: per-metric agreement vs human labels (provenance, stance, legacy)
 
 **`manipulation_check.py`** — framing / rewards
 - Volunteer/pitch patterns, domain-aligned leadership
 - Anchor takeover trajectory (early vs late problems)
 - Reward PASS/FAIL history and final scores
 
+**`behavior_analysis.py`** — bidding / confidence / pressure
+- Per-agent rows for `BID`, `CONFIDENCE`, public `CLAIM`, selection, PASS/FAIL, score pressure, and early/late phase
+- Summaries for confidence calibration, less-aligned LEAD bids, post-failure caution, and behind/ahead score pressure
+- Optional `--csv` export for plotting or statistical analysis
+
+**`plot_behavior.py`** — visual behavior dashboard
+- Dependency-free HTML/SVG plots for confidence timeline, selected-leader pass rate by confidence bin, and LEAD rate under pressure
+- Generates browser-viewable files under `runs/views/`
+
 ## View a run (chat-style HTML)
 
 Read a run as a visual timeline instead of raw JSON. Each problem card shows: **problem → pitches → leader selected → discussion → outcome**.
 
-**Phase 2 (recommended starting point)**
+**Phase 2 pilot viewers**
 
 | Condition | Chat viewer |
 |---|---|

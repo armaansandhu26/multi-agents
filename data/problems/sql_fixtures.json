@@ -1,0 +1,113 @@
+{
+  "network_1": {
+    "description": "High-school social network. Friend stores each friendship in BOTH directions; Likes is directed.",
+    "schema": [
+      "CREATE TABLE Highschooler (ID INTEGER PRIMARY KEY, name TEXT, grade INTEGER)",
+      "CREATE TABLE Friend (student_id INTEGER, friend_id INTEGER)",
+      "CREATE TABLE Likes (student_id INTEGER, liked_id INTEGER)"
+    ],
+    "inserts": [
+      "INSERT INTO Highschooler VALUES (1,'Jordan',9),(2,'Gabriel',9),(3,'Tiffany',9),(4,'Cassandra',9),(5,'Haley',10),(6,'Andrew',10),(7,'Alexis',11),(8,'Austin',11),(9,'Kyle',12),(10,'Brittany',12)",
+      "INSERT INTO Friend VALUES (1,2),(2,1),(1,3),(3,1),(2,3),(3,2),(4,5),(5,4),(5,6),(6,5),(6,7),(7,6),(7,8),(8,7),(9,10),(10,9),(1,5),(5,1),(3,6),(6,3)",
+      "INSERT INTO Likes VALUES (1,2),(3,2),(5,6),(6,5),(7,8),(9,10),(10,9),(2,4)"
+    ]
+  },
+  "employee_hire_evaluation": {
+    "description": "Shops, employees, hiring records (Is_full_time: 1=full-time, 0=part-time), and bonus evaluations.",
+    "schema": [
+      "CREATE TABLE employee (Employee_ID INTEGER PRIMARY KEY, Name TEXT, Age INTEGER, City TEXT)",
+      "CREATE TABLE shop (Shop_ID INTEGER PRIMARY KEY, Name TEXT, Location TEXT, District TEXT, Number_products INTEGER, Manager_name TEXT)",
+      "CREATE TABLE hiring (Shop_ID INTEGER, Employee_ID INTEGER, Start_year INTEGER, Is_full_time INTEGER)",
+      "CREATE TABLE evaluation (Employee_ID INTEGER, Year_awarded INTEGER, Bonus INTEGER)"
+    ],
+    "inserts": [
+      "INSERT INTO employee VALUES (1,'Alice',34,'Springfield'),(2,'Bob',28,'Riverton'),(3,'Cara',45,'Springfield'),(4,'Dev',23,'Lakeside'),(5,'Eli',31,'Riverton'),(6,'Fay',52,'Springfield'),(7,'Gus',27,'Hilltop'),(8,'Hana',38,'Lakeside'),(9,'Ivan',29,'Riverton'),(10,'Jia',41,'Hilltop')",
+      "INSERT INTO shop VALUES (1,'Apex Mart','Downtown','Central',120,'Dana'),(2,'Bolt Goods','Riverside','East',80,'Lee'),(3,'Crest Store','Hillside','West',150,'Omar'),(4,'Dune Outlet','Seaside','East',60,'Pria'),(5,'Echo Depot','Old Town','Central',100,'Quinn')",
+      "INSERT INTO hiring VALUES (1,1,2018,1),(1,2,2019,1),(1,3,2020,0),(2,4,2021,1),(2,5,2019,0),(3,6,2017,1),(3,7,2018,1),(3,8,2020,1),(4,9,2022,0),(5,10,2021,1)",
+      "INSERT INTO evaluation VALUES (1,2019,1000),(1,2021,1500),(3,2020,800),(6,2018,1200),(6,2020,900),(6,2022,1100),(8,2021,700),(10,2022,2000)"
+    ]
+  },
+  "student_transcripts": {
+    "description": "Students enrol per semester; each enrolment links to one or more courses.",
+    "schema": [
+      "CREATE TABLE Students (student_id INTEGER PRIMARY KEY, first_name TEXT, last_name TEXT, date_first_registered TEXT)",
+      "CREATE TABLE Semesters (semester_id INTEGER PRIMARY KEY, semester_name TEXT)",
+      "CREATE TABLE Courses (course_id INTEGER PRIMARY KEY, course_name TEXT)",
+      "CREATE TABLE Student_Enrolment (student_enrolment_id INTEGER PRIMARY KEY, student_id INTEGER, semester_id INTEGER, degree_program_id INTEGER)",
+      "CREATE TABLE Student_Enrolment_Courses (student_course_id INTEGER PRIMARY KEY, course_id INTEGER, student_enrolment_id INTEGER)"
+    ],
+    "inserts": [
+      "INSERT INTO Students VALUES (1,'Ava','Stone','2019-09-01'),(2,'Ben','Reed','2020-01-15'),(3,'Cleo','Park','2019-09-01'),(4,'Dan','Wu','2021-09-01'),(5,'Eve','Cruz','2020-09-01'),(6,'Finn','Hale','2021-01-15')",
+      "INSERT INTO Semesters VALUES (1,'Fall 2020'),(2,'Spring 2021'),(3,'Fall 2021')",
+      "INSERT INTO Courses VALUES (1,'Algebra'),(2,'Biology'),(3,'Chemistry'),(4,'Drama'),(5,'Economics')",
+      "INSERT INTO Student_Enrolment VALUES (1,1,1,10),(2,1,2,10),(3,2,1,20),(4,3,2,10),(5,3,3,10),(6,4,3,30),(7,5,1,20),(8,5,2,20),(9,5,3,20),(10,6,3,10)",
+      "INSERT INTO Student_Enrolment_Courses VALUES (1,1,1),(2,2,1),(3,3,2),(4,1,3),(5,2,4),(6,3,4),(7,4,5),(8,5,6),(9,1,7),(10,2,8),(11,3,9),(12,4,9),(13,1,10)"
+    ]
+  },
+  "flight_logistics": {
+    "description": "Airports, airlines, and direct flights between airports.",
+    "schema": [
+      "CREATE TABLE airport (airport_code TEXT PRIMARY KEY, city TEXT, country TEXT)",
+      "CREATE TABLE airline (airline_id INTEGER PRIMARY KEY, name TEXT, country TEXT)",
+      "CREATE TABLE flight (flight_id INTEGER PRIMARY KEY, airline_id INTEGER, source_code TEXT, dest_code TEXT, duration_minutes INTEGER, price INTEGER)"
+    ],
+    "inserts": [
+      "INSERT INTO airport VALUES ('JFK','New York','USA'),('LAX','Los Angeles','USA'),('ORD','Chicago','USA'),('LHR','London','UK'),('CDG','Paris','France'),('NRT','Tokyo','Japan')",
+      "INSERT INTO airline VALUES (1,'AeroOne','USA'),(2,'BlueJet','USA'),(3,'SkyEuro','UK'),(4,'NipponAir','Japan')",
+      "INSERT INTO flight VALUES (1,1,'JFK','LAX',360,320),(2,1,'LAX','JFK',350,310),(3,1,'JFK','ORD',150,140),(4,2,'ORD','LAX',250,210),(5,2,'JFK','LHR',420,520),(6,2,'LHR','JFK',440,540),(7,3,'LHR','CDG',80,90),(8,3,'CDG','LHR',85,95),(9,3,'LHR','NRT',700,820),(10,4,'NRT','LAX',620,750),(11,4,'NRT','JFK',780,890),(12,4,'LAX','NRT',640,760)"
+    ]
+  },
+  "ecommerce_orders": {
+    "description": "Online store. order_items.sale_price is the price at checkout (may differ from products.list_price). Only status='completed' orders count as sales unless the question says otherwise.",
+    "schema": [
+      "CREATE TABLE customers (customer_id INTEGER PRIMARY KEY, name TEXT, signup_date TEXT)",
+      "CREATE TABLE categories (category_id INTEGER PRIMARY KEY, name TEXT)",
+      "CREATE TABLE products (product_id INTEGER PRIMARY KEY, name TEXT, category_id INTEGER, list_price REAL)",
+      "CREATE TABLE orders (order_id INTEGER PRIMARY KEY, customer_id INTEGER, order_date TEXT, status TEXT)",
+      "CREATE TABLE order_items (item_id INTEGER PRIMARY KEY, order_id INTEGER, product_id INTEGER, quantity INTEGER, sale_price REAL)"
+    ],
+    "inserts": [
+      "INSERT INTO categories VALUES (1,'Electronics'),(2,'Books'),(3,'Home')",
+      "INSERT INTO products VALUES (1,'Phone',1,699.0),(2,'Tablet',1,399.0),(3,'SQL Guide',2,45.0),(4,'Novel',2,18.0),(5,'Lamp',3,32.0),(6,'Rug',3,120.0),(7,'Monitor',1,899.0)",
+      "INSERT INTO customers VALUES (1,'Ada','2021-03-01'),(2,'Ben','2022-01-15'),(3,'Cleo','2020-11-20'),(4,'Dan','2023-06-01'),(5,'Eve','2019-08-10')",
+      "INSERT INTO orders VALUES (1,1,'2023-01-10','completed'),(2,1,'2023-02-14','cancelled'),(3,2,'2023-01-20','completed'),(4,2,'2023-03-05','completed'),(5,3,'2023-02-01','completed'),(6,3,'2023-04-12','pending'),(7,4,'2023-05-01','completed'),(8,5,'2023-01-05','cancelled'),(9,5,'2023-06-15','completed'),(10,1,'2023-05-20','completed'),(11,2,'2023-01-25','completed'),(12,2,'2023-01-28','completed')",
+      "INSERT INTO order_items VALUES (1,1,1,1,679.0),(2,1,3,2,42.0),(3,2,1,1,699.0),(4,3,4,3,17.0),(5,3,3,1,45.0),(6,4,5,2,30.0),(7,4,6,1,115.0),(8,5,2,1,389.0),(9,5,5,1,32.0),(10,7,3,1,45.0),(11,9,4,1,18.0),(12,10,2,1,379.0),(13,10,5,1,32.0),(14,11,4,2,17.0),(15,12,4,1,18.0)"
+    ]
+  },
+  "clinic_records": {
+    "description": "Clinic scheduling and billing. appointment status is scheduled, completed, or no_show. Only completed visits count unless stated otherwise.",
+    "schema": [
+      "CREATE TABLE patients (patient_id INTEGER PRIMARY KEY, name TEXT, birth_year INTEGER)",
+      "CREATE TABLE doctors (doctor_id INTEGER PRIMARY KEY, name TEXT, specialty TEXT)",
+      "CREATE TABLE appointments (appt_id INTEGER PRIMARY KEY, patient_id INTEGER, doctor_id INTEGER, appt_date TEXT, status TEXT)",
+      "CREATE TABLE diagnoses (code TEXT PRIMARY KEY, description TEXT)",
+      "CREATE TABLE appointment_diagnoses (appt_id INTEGER, code TEXT)",
+      "CREATE TABLE prescriptions (rx_id INTEGER PRIMARY KEY, appt_id INTEGER, drug_name TEXT, days_supply INTEGER)"
+    ],
+    "inserts": [
+      "INSERT INTO patients VALUES (1,'Mia',1988),(2,'Noah',1995),(3,'Olivia',1990),(4,'Paul',1979),(5,'Quinn',2001)",
+      "INSERT INTO doctors VALUES (1,'Dr Adams','GP'),(2,'Dr Brooks','GP'),(3,'Dr Chen','Cardiology'),(4,'Dr Diaz','Dermatology')",
+      "INSERT INTO appointments VALUES (1,1,1,'2023-01-10','completed'),(2,1,1,'2023-02-15','completed'),(3,1,1,'2023-03-01','no_show'),(4,2,2,'2023-01-20','completed'),(5,2,2,'2023-01-22','completed'),(6,2,2,'2023-01-24','completed'),(7,2,3,'2023-02-05','completed'),(8,3,3,'2023-01-25','completed'),(9,3,4,'2023-03-10','completed'),(10,4,1,'2023-02-28','scheduled'),(11,5,2,'2023-05-01','completed'),(12,5,4,'2023-05-15','completed'),(13,4,3,'2023-06-01','no_show'),(14,3,3,'2023-06-10','completed')",
+      "INSERT INTO diagnoses VALUES ('J06','URI'),('I10','Hypertension'),('L30','Dermatitis'),('Z00','Checkup')",
+      "INSERT INTO appointment_diagnoses VALUES (1,'J06'),(2,'I10'),(4,'J06'),(5,'J06'),(6,'J06'),(7,'I10'),(8,'I10'),(9,'L30'),(11,'Z00'),(12,'L30')",
+      "INSERT INTO prescriptions VALUES (1,1,'Amoxicillin',7),(2,2,'Lisinopril',30),(3,4,'Amoxicillin',7),(4,5,'Amoxicillin',7),(5,6,'Amoxicillin',7),(6,7,'Metoprolol',30),(7,8,'Hydrocortisone',14),(8,11,'Multivitamin',90),(9,12,'Hydrocortisone',14)"
+    ]
+  },
+  "project_tasks": {
+    "description": "Engineering tasks with assignees and hour logs. A task may have multiple assignees; logged hours can exceed estimates.",
+    "schema": [
+      "CREATE TABLE projects (project_id INTEGER PRIMARY KEY, name TEXT, budget_hours INTEGER, active INTEGER)",
+      "CREATE TABLE tasks (task_id INTEGER PRIMARY KEY, project_id INTEGER, title TEXT, estimate_hours INTEGER)",
+      "CREATE TABLE employees (employee_id INTEGER PRIMARY KEY, name TEXT, team TEXT)",
+      "CREATE TABLE task_assignments (task_id INTEGER, employee_id INTEGER, role TEXT)",
+      "CREATE TABLE time_logs (log_id INTEGER PRIMARY KEY, task_id INTEGER, employee_id INTEGER, hours REAL, log_date TEXT)"
+    ],
+    "inserts": [
+      "INSERT INTO projects VALUES (1,'Apollo',120,1),(2,'Borealis',80,1),(3,'Catalyst',60,0)",
+      "INSERT INTO tasks VALUES (1,1,'Design API',40),(2,1,'Build API',60),(3,1,'Write docs',20),(4,2,'Migrate DB',50),(5,2,'Cutover',30),(6,3,'Archive',10)",
+      "INSERT INTO employees VALUES (1,'Riley','Platform'),(2,'Sam','Platform'),(3,'Taylor','Data'),(4,'Jordan','Data'),(5,'Casey','Platform')",
+      "INSERT INTO task_assignments VALUES (1,1,'owner'),(1,2,'reviewer'),(2,1,'owner'),(2,2,'owner'),(3,5,'owner'),(4,3,'owner'),(4,1,'owner'),(4,4,'owner'),(5,3,'owner'),(6,4,'owner')",
+      "INSERT INTO time_logs VALUES (1,1,1,24,'2023-01-05'),(2,1,2,8,'2023-01-06'),(3,2,1,35,'2023-01-10'),(4,2,2,40,'2023-01-12'),(5,3,5,12,'2023-01-15'),(6,4,3,30,'2023-02-01'),(7,4,1,15,'2023-02-02'),(8,4,4,28,'2023-02-03'),(9,5,3,20,'2023-02-10'),(10,2,1,10,'2023-01-20'),(11,1,1,5,'2023-01-21')"
+    ]
+  }
+}

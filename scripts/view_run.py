@@ -94,6 +94,7 @@ def group_problems(transcript: list[dict]) -> list[dict]:
                 "pitches": [],
                 "selection": None,
                 "chat": [],
+                "final": None,
                 "reward": None,
             }
             continue
@@ -107,6 +108,8 @@ def group_problems(transcript: list[dict]) -> list[dict]:
             current["selection"] = turn
         elif kind == "reward":
             current["reward"] = turn
+        elif kind == "final":
+            current["final"] = turn
         elif kind == "agent":
             current["chat"].append(turn)
 
@@ -176,6 +179,18 @@ def render_chat(chat: list[dict], leader: str | None) -> str:
     return "".join(bubbles)
 
 
+def render_final(final: dict | None) -> str:
+    if not final:
+        return ""
+    agent = final["agent_id"]
+    return f"""
+    <div class="selection-banner">
+      <div class="phase-label">Final solution (submitted by {html.escape(AGENT_LABELS.get(agent, agent))})</div>
+      <div class="selection-body">{format_content(final.get('content', ''))}</div>
+    </div>
+    """
+
+
 def render_reward(reward: dict | None) -> str:
     if not reward:
         return ""
@@ -193,6 +208,10 @@ def leader_from_selection(selection: dict | None) -> str | None:
     if not selection:
         return None
     content = selection.get("content", "").lower()
+    if "agent_alpha will open" in content or "leader: agent_alpha" in content:
+        return "code_expert"
+    if "agent_beta will open" in content or "leader: agent_beta" in content:
+        return "sql_expert"
     if "code_expert will open" in content or "leader: code_expert" in content:
         return "code_expert"
     if "sql_expert will open" in content or "leader: sql_expert" in content:
@@ -232,6 +251,7 @@ def render_run(run: dict) -> str:
               {render_pitches(group['pitches'])}
               {render_selection(group['selection'])}
               {render_chat(group['chat'], leader)}
+              {render_final(group['final'])}
               {render_reward(group['reward'])}
             </section>
             """

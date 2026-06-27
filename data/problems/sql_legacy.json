@@ -1,0 +1,326 @@
+[
+  {
+    "id": "network_q1",
+    "source": "Spider-style (curated)",
+    "db_id": "network_1",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable Highschooler(ID, name, grade)\nTable Friend(student_id, friend_id) -- each friendship is stored in BOTH directions\nTable Likes(student_id, liked_id) -- directed: student_id likes liked_id\n\nQuestion: Find the names of students who have at least 2 friends and like at least 1 person. Return one column: name. Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT h.name FROM Highschooler h WHERE h.ID IN (SELECT student_id FROM Friend GROUP BY student_id HAVING COUNT(*) >= 2) AND h.ID IN (SELECT student_id FROM Likes)",
+    "tier": "easy"
+  },
+  {
+    "id": "network_q2",
+    "source": "Spider-style (curated)",
+    "db_id": "network_1",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable Highschooler(ID, name, grade)\nTable Friend(student_id, friend_id) -- each friendship is stored in BOTH directions\nTable Likes(student_id, liked_id) -- directed: student_id likes liked_id\n\nQuestion: For each grade, find the student(s) with the most friends in that grade (include ties). Return two columns: name, grade. Write a single SQLite SELECT statement.",
+    "gold_query": "WITH fc AS (SELECT h.ID, h.name, h.grade, COUNT(f.friend_id) AS n FROM Highschooler h JOIN Friend f ON f.student_id = h.ID GROUP BY h.ID) SELECT name, grade FROM fc WHERE (grade, n) IN (SELECT grade, MAX(n) FROM fc GROUP BY grade)",
+    "tier": "easy"
+  },
+  {
+    "id": "network_q3",
+    "source": "Spider-style (curated)",
+    "db_id": "network_1",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable Highschooler(ID, name, grade)\nTable Friend(student_id, friend_id) -- each friendship is stored in BOTH directions\nTable Likes(student_id, liked_id) -- directed: student_id likes liked_id\n\nQuestion: Find the names of students who like someone who does not like them back. Return one column: name (one row per such unrequited like). Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT h.name FROM Highschooler h JOIN Likes l ON l.student_id = h.ID WHERE NOT EXISTS (SELECT 1 FROM Likes l2 WHERE l2.student_id = l.liked_id AND l2.liked_id = l.student_id)",
+    "tier": "easy"
+  },
+  {
+    "id": "network_q4",
+    "source": "Spider-style (curated)",
+    "db_id": "network_1",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable Highschooler(ID, name, grade)\nTable Friend(student_id, friend_id) -- each friendship is stored in BOTH directions\nTable Likes(student_id, liked_id) -- directed: student_id likes liked_id\n\nQuestion: Among students who have at least one friend, find those none of whose friends are in their own grade. Return one column: name. Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT h.name FROM Highschooler h WHERE h.ID IN (SELECT student_id FROM Friend) AND NOT EXISTS (SELECT 1 FROM Friend f JOIN Highschooler h2 ON h2.ID = f.friend_id WHERE f.student_id = h.ID AND h2.grade = h.grade)",
+    "tier": "easy"
+  },
+  {
+    "id": "employee_q1",
+    "source": "Spider-style (curated)",
+    "db_id": "employee_hire_evaluation",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable employee(Employee_ID, Name, Age, City)\nTable shop(Shop_ID, Name, Location, District, Number_products, Manager_name)\nTable hiring(Shop_ID, Employee_ID, Start_year, Is_full_time) -- Is_full_time: 1 = full-time, 0 = part-time\nTable evaluation(Employee_ID, Year_awarded, Bonus)\n\nQuestion: Which shops employ more full-time workers than the average number of full-time workers per shop (average over all shops)? Return two columns: shop name, full-time employee count. Write a single SQLite SELECT statement.",
+    "gold_query": "WITH ft AS (SELECT s.Shop_ID, s.Name, COALESCE(SUM(CASE WHEN h.Is_full_time = 1 THEN 1 ELSE 0 END), 0) AS n FROM shop s LEFT JOIN hiring h ON h.Shop_ID = s.Shop_ID GROUP BY s.Shop_ID) SELECT Name, n FROM ft WHERE n > (SELECT AVG(n) FROM ft)",
+    "tier": "easy"
+  },
+  {
+    "id": "employee_q2",
+    "source": "Spider-style (curated)",
+    "db_id": "employee_hire_evaluation",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable employee(Employee_ID, Name, Age, City)\nTable shop(Shop_ID, Name, Location, District, Number_products, Manager_name)\nTable hiring(Shop_ID, Employee_ID, Start_year, Is_full_time) -- Is_full_time: 1 = full-time, 0 = part-time\nTable evaluation(Employee_ID, Year_awarded, Bonus)\n\nQuestion: Find the employee(s) with the highest total bonus across all their evaluations (include ties). Return two columns: employee name, total bonus. Write a single SQLite SELECT statement.",
+    "gold_query": "WITH tb AS (SELECT e.Employee_ID, e.Name, SUM(ev.Bonus) AS total FROM employee e JOIN evaluation ev ON ev.Employee_ID = e.Employee_ID GROUP BY e.Employee_ID) SELECT Name, total FROM tb WHERE total = (SELECT MAX(total) FROM tb)",
+    "tier": "easy"
+  },
+  {
+    "id": "employee_q3",
+    "source": "Spider-style (curated)",
+    "db_id": "employee_hire_evaluation",
+    "order_matters": true,
+    "prompt": "Database schema (SQLite):\n\nTable employee(Employee_ID, Name, Age, City)\nTable shop(Shop_ID, Name, Location, District, Number_products, Manager_name)\nTable hiring(Shop_ID, Employee_ID, Start_year, Is_full_time) -- Is_full_time: 1 = full-time, 0 = part-time\nTable evaluation(Employee_ID, Year_awarded, Bonus)\n\nQuestion: For each district, compute the total Number_products across its shops. Return two columns: District, total products \u2014 ordered by total products descending. Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT District, SUM(Number_products) AS total FROM shop GROUP BY District ORDER BY total DESC",
+    "tier": "easy"
+  },
+  {
+    "id": "employee_q4",
+    "source": "Spider-style (curated)",
+    "db_id": "employee_hire_evaluation",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable employee(Employee_ID, Name, Age, City)\nTable shop(Shop_ID, Name, Location, District, Number_products, Manager_name)\nTable hiring(Shop_ID, Employee_ID, Start_year, Is_full_time) -- Is_full_time: 1 = full-time, 0 = part-time\nTable evaluation(Employee_ID, Year_awarded, Bonus)\n\nQuestion: Find the names of employees who were hired before 2021 (Start_year < 2021) and have never received any evaluation. Return one column: name (no duplicates). Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT DISTINCT e.Name FROM employee e JOIN hiring h ON h.Employee_ID = e.Employee_ID WHERE h.Start_year < 2021 AND e.Employee_ID NOT IN (SELECT Employee_ID FROM evaluation)",
+    "tier": "easy"
+  },
+  {
+    "id": "transcripts_q1",
+    "source": "Spider-style (curated)",
+    "db_id": "student_transcripts",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable Students(student_id, first_name, last_name, date_first_registered)\nTable Semesters(semester_id, semester_name)\nTable Courses(course_id, course_name)\nTable Student_Enrolment(student_enrolment_id, student_id, semester_id, degree_program_id)\nTable Student_Enrolment_Courses(student_course_id, course_id, student_enrolment_id)\n\nQuestion: Find the first name and last name of the student(s) enrolled in the most courses in total across all semesters (include ties). Return two columns: first_name, last_name. Write a single SQLite SELECT statement.",
+    "gold_query": "WITH cc AS (SELECT se.student_id, COUNT(sec.student_course_id) AS n FROM Student_Enrolment se JOIN Student_Enrolment_Courses sec ON sec.student_enrolment_id = se.student_enrolment_id GROUP BY se.student_id) SELECT s.first_name, s.last_name FROM Students s JOIN cc ON cc.student_id = s.student_id WHERE cc.n = (SELECT MAX(n) FROM cc)",
+    "tier": "easy"
+  },
+  {
+    "id": "transcripts_q2",
+    "source": "Spider-style (curated)",
+    "db_id": "student_transcripts",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable Students(student_id, first_name, last_name, date_first_registered)\nTable Semesters(semester_id, semester_name)\nTable Courses(course_id, course_name)\nTable Student_Enrolment(student_enrolment_id, student_id, semester_id, degree_program_id)\nTable Student_Enrolment_Courses(student_course_id, course_id, student_enrolment_id)\n\nQuestion: Which course(s) have been taken by the most distinct students (include ties)? Return one column: course_name. Write a single SQLite SELECT statement.",
+    "gold_query": "WITH cs AS (SELECT sec.course_id, COUNT(DISTINCT se.student_id) AS n FROM Student_Enrolment_Courses sec JOIN Student_Enrolment se ON se.student_enrolment_id = sec.student_enrolment_id GROUP BY sec.course_id) SELECT c.course_name FROM Courses c JOIN cs ON cs.course_id = c.course_id WHERE cs.n = (SELECT MAX(n) FROM cs)",
+    "tier": "easy"
+  },
+  {
+    "id": "transcripts_q3",
+    "source": "Spider-style (curated)",
+    "db_id": "student_transcripts",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable Students(student_id, first_name, last_name, date_first_registered)\nTable Semesters(semester_id, semester_name)\nTable Courses(course_id, course_name)\nTable Student_Enrolment(student_enrolment_id, student_id, semester_id, degree_program_id)\nTable Student_Enrolment_Courses(student_course_id, course_id, student_enrolment_id)\n\nQuestion: Find the students who were enrolled in every semester that exists in the database. Return two columns: first_name, last_name. Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT s.first_name, s.last_name FROM Students s JOIN Student_Enrolment se ON se.student_id = s.student_id GROUP BY s.student_id HAVING COUNT(DISTINCT se.semester_id) = (SELECT COUNT(*) FROM Semesters)",
+    "tier": "easy"
+  },
+  {
+    "id": "transcripts_q4",
+    "source": "Spider-style (curated)",
+    "db_id": "student_transcripts",
+    "order_matters": true,
+    "prompt": "Database schema (SQLite):\n\nTable Students(student_id, first_name, last_name, date_first_registered)\nTable Semesters(semester_id, semester_name)\nTable Courses(course_id, course_name)\nTable Student_Enrolment(student_enrolment_id, student_id, semester_id, degree_program_id)\nTable Student_Enrolment_Courses(student_course_id, course_id, student_enrolment_id)\n\nQuestion: For each semester, count the distinct students enrolled in it. Return two columns: semester_name, student count \u2014 ordered by semester_id ascending. Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT sem.semester_name, COUNT(DISTINCT se.student_id) AS n FROM Semesters sem JOIN Student_Enrolment se ON se.semester_id = sem.semester_id GROUP BY sem.semester_id ORDER BY sem.semester_id",
+    "tier": "easy"
+  },
+  {
+    "id": "flights_q1",
+    "source": "Spider-style (curated)",
+    "db_id": "flight_logistics",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable airport(airport_code, city, country)\nTable airline(airline_id, name, country)\nTable flight(flight_id, airline_id, source_code, dest_code, duration_minutes, price)\n\nQuestion: Find the airline(s) with the highest average flight price (include ties). Return one column: airline name. Write a single SQLite SELECT statement.",
+    "gold_query": "WITH ap AS (SELECT a.airline_id, a.name, AVG(f.price) AS avg_price FROM airline a JOIN flight f ON f.airline_id = a.airline_id GROUP BY a.airline_id) SELECT name FROM ap WHERE avg_price = (SELECT MAX(avg_price) FROM ap)",
+    "tier": "easy"
+  },
+  {
+    "id": "flights_q2",
+    "source": "Spider-style (curated)",
+    "db_id": "flight_logistics",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable airport(airport_code, city, country)\nTable airline(airline_id, name, country)\nTable flight(flight_id, airline_id, source_code, dest_code, duration_minutes, price)\n\nQuestion: Find the distinct destination cities reachable by a direct flight departing from any airport in the city 'New York'. Return one column: city (no duplicates). Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT DISTINCT ad.city FROM flight f JOIN airport ad ON ad.airport_code = f.dest_code JOIN airport asrc ON asrc.airport_code = f.source_code WHERE asrc.city = 'New York'",
+    "tier": "easy"
+  },
+  {
+    "id": "flights_q3",
+    "source": "Spider-style (curated)",
+    "db_id": "flight_logistics",
+    "order_matters": true,
+    "prompt": "Database schema (SQLite):\n\nTable airport(airport_code, city, country)\nTable airline(airline_id, name, country)\nTable flight(flight_id, airline_id, source_code, dest_code, duration_minutes, price)\n\nQuestion: For each airline operating at least 3 flights, return its name, number of flights, and average flight duration in minutes \u2014 ordered by average duration descending. Return three columns: name, flight count, average duration. Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT a.name, COUNT(*) AS n, AVG(f.duration_minutes) AS avg_dur FROM airline a JOIN flight f ON f.airline_id = a.airline_id GROUP BY a.airline_id HAVING COUNT(*) >= 3 ORDER BY avg_dur DESC",
+    "tier": "easy"
+  },
+  {
+    "id": "flights_q4",
+    "source": "Spider-style (curated)",
+    "db_id": "flight_logistics",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable airport(airport_code, city, country)\nTable airline(airline_id, name, country)\nTable flight(flight_id, airline_id, source_code, dest_code, duration_minutes, price)\n\nQuestion: Find all pairs of airports that have direct flights in BOTH directions between them. Return two columns: the two airport codes, with the alphabetically smaller code first (each pair exactly once, no duplicates). Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT DISTINCT f1.source_code, f1.dest_code FROM flight f1 JOIN flight f2 ON f1.source_code = f2.dest_code AND f1.dest_code = f2.source_code WHERE f1.source_code < f1.dest_code",
+    "tier": "easy"
+  },
+  {
+    "id": "ec_q1",
+    "db_id": "ecommerce_orders",
+    "tier": "candidate",
+    "order_matters": true,
+    "prompt": "Database schema (SQLite):\n\nTable customers(customer_id, name, signup_date)\nTable categories(category_id, name)\nTable products(product_id, name, category_id, list_price)\nTable orders(order_id, customer_id, order_date, status) -- status: completed, cancelled, pending\nTable order_items(item_id, order_id, product_id, quantity, sale_price) -- sale_price at checkout; may differ from list_price\n\nOnly count orders with status='completed' as sales unless the question explicitly says otherwise.\n\nQuestion: For each customer, compute total revenue from completed orders (sum of quantity * sale_price across all line items). Return two columns: customer name, total revenue \u2014 ordered by total revenue descending, then name ascending. Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT c.name, SUM(oi.quantity * oi.sale_price) AS revenue FROM customers c JOIN orders o ON o.customer_id = c.customer_id JOIN order_items oi ON oi.order_id = o.order_id WHERE o.status = 'completed' GROUP BY c.customer_id ORDER BY revenue DESC, c.name ASC",
+    "source": "Spider-style (curated, hardened)"
+  },
+  {
+    "id": "ec_q2",
+    "db_id": "ecommerce_orders",
+    "tier": "candidate",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable customers(customer_id, name, signup_date)\nTable categories(category_id, name)\nTable products(product_id, name, category_id, list_price)\nTable orders(order_id, customer_id, order_date, status) -- status: completed, cancelled, pending\nTable order_items(item_id, order_id, product_id, quantity, sale_price) -- sale_price at checkout; may differ from list_price\n\nOnly count orders with status='completed' as sales unless the question explicitly says otherwise.\n\nQuestion: Which category name(s) have the highest total completed-order revenue (include ties)? Revenue is quantity * sale_price summed over completed orders only. Return one column: category name. Write a single SQLite SELECT statement.",
+    "gold_query": "WITH cat_rev AS (SELECT cat.name, SUM(oi.quantity * oi.sale_price) AS rev FROM categories cat JOIN products p ON p.category_id = cat.category_id JOIN order_items oi ON oi.product_id = p.product_id JOIN orders o ON o.order_id = oi.order_id WHERE o.status = 'completed' GROUP BY cat.category_id) SELECT name FROM cat_rev WHERE rev = (SELECT MAX(rev) FROM cat_rev)",
+    "source": "Spider-style (curated, hardened)"
+  },
+  {
+    "id": "ec_q3",
+    "db_id": "ecommerce_orders",
+    "tier": "candidate",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable customers(customer_id, name, signup_date)\nTable categories(category_id, name)\nTable products(product_id, name, category_id, list_price)\nTable orders(order_id, customer_id, order_date, status) -- status: completed, cancelled, pending\nTable order_items(item_id, order_id, product_id, quantity, sale_price) -- sale_price at checkout; may differ from list_price\n\nOnly count orders with status='completed' as sales unless the question explicitly says otherwise.\n\nQuestion: Find customer name(s) who have purchased at least one completed-order product from EVERY category in the database (include customers with purchases in all three categories). Return one column: name. Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT c.name FROM customers c WHERE NOT EXISTS (SELECT 1 FROM categories cat WHERE NOT EXISTS (SELECT 1 FROM orders o JOIN order_items oi ON oi.order_id = o.order_id JOIN products p ON p.product_id = oi.product_id WHERE o.customer_id = c.customer_id AND o.status = 'completed' AND p.category_id = cat.category_id))",
+    "source": "Spider-style (curated, hardened)"
+  },
+  {
+    "id": "ec_q4",
+    "db_id": "ecommerce_orders",
+    "tier": "candidate",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable customers(customer_id, name, signup_date)\nTable categories(category_id, name)\nTable products(product_id, name, category_id, list_price)\nTable orders(order_id, customer_id, order_date, status) -- status: completed, cancelled, pending\nTable order_items(item_id, order_id, product_id, quantity, sale_price) -- sale_price at checkout; may differ from list_price\n\nOnly count orders with status='completed' as sales unless the question explicitly says otherwise.\n\nQuestion: Find product name(s) that never appear in any line item belonging to a completed order (products with zero completed sales). Return one column: product name. Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT p.name FROM products p WHERE NOT EXISTS (SELECT 1 FROM order_items oi JOIN orders o ON o.order_id = oi.order_id WHERE oi.product_id = p.product_id AND o.status = 'completed')",
+    "source": "Spider-style (curated, hardened)"
+  },
+  {
+    "id": "ec_q5",
+    "db_id": "ecommerce_orders",
+    "tier": "candidate",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable customers(customer_id, name, signup_date)\nTable categories(category_id, name)\nTable products(product_id, name, category_id, list_price)\nTable orders(order_id, customer_id, order_date, status) -- status: completed, cancelled, pending\nTable order_items(item_id, order_id, product_id, quantity, sale_price) -- sale_price at checkout; may differ from list_price\n\nOnly count orders with status='completed' as sales unless the question explicitly says otherwise.\n\nQuestion: For each category, find the product name(s) with the highest total quantity sold in completed orders (include ties within a category). Return two columns: category name, product name. Write a single SQLite SELECT statement.",
+    "gold_query": "WITH sales AS (SELECT cat.name AS category, p.name AS product, SUM(oi.quantity) AS qty FROM categories cat JOIN products p ON p.category_id = cat.category_id JOIN order_items oi ON oi.product_id = p.product_id JOIN orders o ON o.order_id = oi.order_id WHERE o.status = 'completed' GROUP BY cat.category_id, p.product_id), mx AS (SELECT category, MAX(qty) AS max_qty FROM sales GROUP BY category) SELECT s.category, s.product FROM sales s JOIN mx ON mx.category = s.category AND mx.max_qty = s.qty",
+    "source": "Spider-style (curated, hardened)"
+  },
+  {
+    "id": "ec_q6",
+    "db_id": "ecommerce_orders",
+    "tier": "candidate",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable customers(customer_id, name, signup_date)\nTable categories(category_id, name)\nTable products(product_id, name, category_id, list_price)\nTable orders(order_id, customer_id, order_date, status) -- status: completed, cancelled, pending\nTable order_items(item_id, order_id, product_id, quantity, sale_price) -- sale_price at checkout; may differ from list_price\n\nOnly count orders with status='completed' as sales unless the question explicitly says otherwise.\n\nQuestion: Find customer name(s) whose average completed-order total (sum of line items per order) is strictly greater than the average completed-order total across ALL completed orders in the database. Return one column: name. Write a single SQLite SELECT statement.",
+    "gold_query": "WITH order_totals AS (SELECT o.order_id, o.customer_id, SUM(oi.quantity * oi.sale_price) AS total FROM orders o JOIN order_items oi ON oi.order_id = o.order_id WHERE o.status = 'completed' GROUP BY o.order_id), cust_avg AS (SELECT customer_id, AVG(total) AS avg_order FROM order_totals GROUP BY customer_id) SELECT c.name FROM customers c JOIN cust_avg ca ON ca.customer_id = c.customer_id WHERE ca.avg_order > (SELECT AVG(total) FROM order_totals)",
+    "source": "Spider-style (curated, hardened)"
+  },
+  {
+    "id": "ec_q7",
+    "db_id": "ecommerce_orders",
+    "tier": "candidate",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable customers(customer_id, name, signup_date)\nTable categories(category_id, name)\nTable products(product_id, name, category_id, list_price)\nTable orders(order_id, customer_id, order_date, status) -- status: completed, cancelled, pending\nTable order_items(item_id, order_id, product_id, quantity, sale_price) -- sale_price at checkout; may differ from list_price\n\nOnly count orders with status='completed' as sales unless the question explicitly says otherwise.\n\nQuestion: Which calendar month (format YYYY-MM) had the highest total completed-order revenue? If tied, return all tied months. Return one column: month. Write a single SQLite SELECT statement.",
+    "gold_query": "WITH monthly AS (SELECT substr(o.order_date, 1, 7) AS month, SUM(oi.quantity * oi.sale_price) AS rev FROM orders o JOIN order_items oi ON oi.order_id = o.order_id WHERE o.status = 'completed' GROUP BY month) SELECT month FROM monthly WHERE rev = (SELECT MAX(rev) FROM monthly)",
+    "source": "Spider-style (curated, hardened)"
+  },
+  {
+    "id": "ec_q8",
+    "db_id": "ecommerce_orders",
+    "tier": "candidate",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable customers(customer_id, name, signup_date)\nTable categories(category_id, name)\nTable products(product_id, name, category_id, list_price)\nTable orders(order_id, customer_id, order_date, status) -- status: completed, cancelled, pending\nTable order_items(item_id, order_id, product_id, quantity, sale_price) -- sale_price at checkout; may differ from list_price\n\nOnly count orders with status='completed' as sales unless the question explicitly says otherwise.\n\nQuestion: Find customer name(s) who bought product 'Phone' and product 'Lamp' in completed orders (not necessarily the same order). Return one column: name. Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT c.name FROM customers c WHERE EXISTS (SELECT 1 FROM orders o JOIN order_items oi ON oi.order_id = o.order_id JOIN products p ON p.product_id = oi.product_id WHERE o.customer_id = c.customer_id AND o.status = 'completed' AND p.name = 'Phone') AND EXISTS (SELECT 1 FROM orders o JOIN order_items oi ON oi.order_id = o.order_id JOIN products p ON p.product_id = oi.product_id WHERE o.customer_id = c.customer_id AND o.status = 'completed' AND p.name = 'Lamp')",
+    "source": "Spider-style (curated, hardened)"
+  },
+  {
+    "id": "cl_q1",
+    "db_id": "clinic_records",
+    "tier": "candidate",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable patients(patient_id, name, birth_year)\nTable doctors(doctor_id, name, specialty)\nTable appointments(appt_id, patient_id, doctor_id, appt_date, status) -- scheduled, completed, no_show\nTable diagnoses(code, description)\nTable appointment_diagnoses(appt_id, code)\nTable prescriptions(rx_id, appt_id, drug_name, days_supply)\n\nOnly count appointments with status='completed' unless the question explicitly says otherwise.\n\nQuestion: Find doctor name(s) whose count of completed appointments is strictly greater than the average count of completed appointments per doctor. Return one column: name. Write a single SQLite SELECT statement.",
+    "gold_query": "WITH doc_counts AS (SELECT d.doctor_id, d.name, COUNT(*) AS n FROM doctors d JOIN appointments a ON a.doctor_id = d.doctor_id WHERE a.status = 'completed' GROUP BY d.doctor_id) SELECT name FROM doc_counts WHERE n > (SELECT AVG(n) FROM doc_counts)",
+    "source": "Spider-style (curated, hardened)"
+  },
+  {
+    "id": "cl_q2",
+    "db_id": "clinic_records",
+    "tier": "candidate",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable patients(patient_id, name, birth_year)\nTable doctors(doctor_id, name, specialty)\nTable appointments(appt_id, patient_id, doctor_id, appt_date, status) -- scheduled, completed, no_show\nTable diagnoses(code, description)\nTable appointment_diagnoses(appt_id, code)\nTable prescriptions(rx_id, appt_id, drug_name, days_supply)\n\nOnly count appointments with status='completed' unless the question explicitly says otherwise.\n\nQuestion: Find patient name(s) with completed appointments in at least 3 distinct calendar months (month = YYYY-MM from appt_date). Return one column: name. Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT p.name FROM patients p JOIN appointments a ON a.patient_id = p.patient_id WHERE a.status = 'completed' GROUP BY p.patient_id HAVING COUNT(DISTINCT substr(a.appt_date, 1, 7)) >= 3",
+    "source": "Spider-style (curated, hardened)"
+  },
+  {
+    "id": "cl_q3",
+    "db_id": "clinic_records",
+    "tier": "candidate",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable patients(patient_id, name, birth_year)\nTable doctors(doctor_id, name, specialty)\nTable appointments(appt_id, patient_id, doctor_id, appt_date, status) -- scheduled, completed, no_show\nTable diagnoses(code, description)\nTable appointment_diagnoses(appt_id, code)\nTable prescriptions(rx_id, appt_id, drug_name, days_supply)\n\nOnly count appointments with status='completed' unless the question explicitly says otherwise.\n\nQuestion: Find diagnosis description(s) that appear on completed appointments handled by at least 2 different doctor specialties. Return one column: description. Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT d.description FROM diagnoses d JOIN appointment_diagnoses ad ON ad.code = d.code JOIN appointments a ON a.appt_id = ad.appt_id JOIN doctors doc ON doc.doctor_id = a.doctor_id WHERE a.status = 'completed' GROUP BY d.code HAVING COUNT(DISTINCT doc.specialty) >= 2",
+    "source": "Spider-style (curated, hardened)"
+  },
+  {
+    "id": "cl_q4",
+    "db_id": "clinic_records",
+    "tier": "candidate",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable patients(patient_id, name, birth_year)\nTable doctors(doctor_id, name, specialty)\nTable appointments(appt_id, patient_id, doctor_id, appt_date, status) -- scheduled, completed, no_show\nTable diagnoses(code, description)\nTable appointment_diagnoses(appt_id, code)\nTable prescriptions(rx_id, appt_id, drug_name, days_supply)\n\nOnly count appointments with status='completed' unless the question explicitly says otherwise.\n\nQuestion: Find patient name(s) who have at least one no_show appointment that occurs AFTER a completed appointment with the same doctor. Return one column: name. Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT DISTINCT p.name FROM patients p JOIN appointments ns ON ns.patient_id = p.patient_id JOIN appointments done ON done.patient_id = p.patient_id AND done.doctor_id = ns.doctor_id WHERE ns.status = 'no_show' AND done.status = 'completed' AND ns.appt_date > done.appt_date",
+    "source": "Spider-style (curated, hardened)"
+  },
+  {
+    "id": "cl_q5",
+    "db_id": "clinic_records",
+    "tier": "candidate",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable patients(patient_id, name, birth_year)\nTable doctors(doctor_id, name, specialty)\nTable appointments(appt_id, patient_id, doctor_id, appt_date, status) -- scheduled, completed, no_show\nTable diagnoses(code, description)\nTable appointment_diagnoses(appt_id, code)\nTable prescriptions(rx_id, appt_id, drug_name, days_supply)\n\nOnly count appointments with status='completed' unless the question explicitly says otherwise.\n\nQuestion: Find drug name(s) prescribed on the largest number of distinct completed appointments (include ties). Count distinct appt_id only for completed appointments linked through prescriptions. Return one column: drug_name. Write a single SQLite SELECT statement.",
+    "gold_query": "WITH rx_counts AS (SELECT pr.drug_name, COUNT(DISTINCT pr.appt_id) AS n FROM prescriptions pr JOIN appointments a ON a.appt_id = pr.appt_id WHERE a.status = 'completed' GROUP BY pr.drug_name) SELECT drug_name FROM rx_counts WHERE n = (SELECT MAX(n) FROM rx_counts)",
+    "source": "Spider-style (curated, hardened)"
+  },
+  {
+    "id": "cl_q6",
+    "db_id": "clinic_records",
+    "tier": "candidate",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable patients(patient_id, name, birth_year)\nTable doctors(doctor_id, name, specialty)\nTable appointments(appt_id, patient_id, doctor_id, appt_date, status) -- scheduled, completed, no_show\nTable diagnoses(code, description)\nTable appointment_diagnoses(appt_id, code)\nTable prescriptions(rx_id, appt_id, drug_name, days_supply)\n\nOnly count appointments with status='completed' unless the question explicitly says otherwise.\n\nQuestion: Find patient name(s) who have at least one scheduled appointment but zero completed appointments. Return one column: name. Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT p.name FROM patients p WHERE EXISTS (SELECT 1 FROM appointments a WHERE a.patient_id = p.patient_id AND a.status = 'scheduled') AND NOT EXISTS (SELECT 1 FROM appointments a WHERE a.patient_id = p.patient_id AND a.status = 'completed')",
+    "source": "Spider-style (curated, hardened)"
+  },
+  {
+    "id": "pt_q1",
+    "db_id": "project_tasks",
+    "tier": "candidate",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable projects(project_id, name, budget_hours, active) -- active: 1=yes, 0=no\nTable tasks(task_id, project_id, title, estimate_hours)\nTable employees(employee_id, name, team)\nTable task_assignments(task_id, employee_id, role)\nTable time_logs(log_id, task_id, employee_id, hours, log_date)\n\nQuestion: Find active project name(s) where total logged hours across all tasks exceed the project's budget_hours. Return one column: name. Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT p.name FROM projects p JOIN tasks t ON t.project_id = p.project_id JOIN time_logs tl ON tl.task_id = t.task_id WHERE p.active = 1 GROUP BY p.project_id HAVING SUM(tl.hours) > p.budget_hours",
+    "source": "Spider-style (curated, hardened)"
+  },
+  {
+    "id": "pt_q2",
+    "db_id": "project_tasks",
+    "tier": "candidate",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable projects(project_id, name, budget_hours, active) -- active: 1=yes, 0=no\nTable tasks(task_id, project_id, title, estimate_hours)\nTable employees(employee_id, name, team)\nTable task_assignments(task_id, employee_id, role)\nTable time_logs(log_id, task_id, employee_id, hours, log_date)\n\nQuestion: Find employee name(s) assigned as owner to at least one task in every ACTIVE project (active=1). Return one column: name. Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT e.name FROM employees e WHERE NOT EXISTS (SELECT 1 FROM projects p WHERE p.active = 1 AND NOT EXISTS (SELECT 1 FROM tasks t JOIN task_assignments ta ON ta.task_id = t.task_id WHERE t.project_id = p.project_id AND ta.employee_id = e.employee_id AND ta.role = 'owner'))",
+    "source": "Spider-style (curated, hardened)"
+  },
+  {
+    "id": "pt_q3",
+    "db_id": "project_tasks",
+    "tier": "candidate",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable projects(project_id, name, budget_hours, active) -- active: 1=yes, 0=no\nTable tasks(task_id, project_id, title, estimate_hours)\nTable employees(employee_id, name, team)\nTable task_assignments(task_id, employee_id, role)\nTable time_logs(log_id, task_id, employee_id, hours, log_date)\n\nQuestion: Find task title(s) whose total logged hours exceed their estimate_hours. Return two columns: project name, task title. Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT p.name, t.title FROM projects p JOIN tasks t ON t.project_id = p.project_id JOIN time_logs tl ON tl.task_id = t.task_id GROUP BY t.task_id HAVING SUM(tl.hours) > t.estimate_hours",
+    "source": "Spider-style (curated, hardened)"
+  },
+  {
+    "id": "pt_q4",
+    "db_id": "project_tasks",
+    "tier": "candidate",
+    "order_matters": true,
+    "prompt": "Database schema (SQLite):\n\nTable projects(project_id, name, budget_hours, active) -- active: 1=yes, 0=no\nTable tasks(task_id, project_id, title, estimate_hours)\nTable employees(employee_id, name, team)\nTable task_assignments(task_id, employee_id, role)\nTable time_logs(log_id, task_id, employee_id, hours, log_date)\n\nQuestion: For each team, return the employee name with the highest total logged hours on that team (include ties). Return two columns: team, employee name \u2014 ordered by team ascending. Write a single SQLite SELECT statement.",
+    "gold_query": "WITH team_hours AS (SELECT e.team, e.name, SUM(tl.hours) AS hrs FROM employees e JOIN time_logs tl ON tl.employee_id = e.employee_id GROUP BY e.employee_id), mx AS (SELECT team, MAX(hrs) AS max_hrs FROM team_hours GROUP BY team) SELECT th.team, th.name FROM team_hours th JOIN mx ON mx.team = th.team AND mx.max_hrs = th.hrs ORDER BY th.team ASC",
+    "source": "Spider-style (curated, hardened)"
+  },
+  {
+    "id": "pt_q5",
+    "db_id": "project_tasks",
+    "tier": "candidate",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable projects(project_id, name, budget_hours, active) -- active: 1=yes, 0=no\nTable tasks(task_id, project_id, title, estimate_hours)\nTable employees(employee_id, name, team)\nTable task_assignments(task_id, employee_id, role)\nTable time_logs(log_id, task_id, employee_id, hours, log_date)\n\nQuestion: Find project name(s) where no task has any logged hours by an employee outside the Platform team. (Projects where every logged hour is by Platform employees, and at least one hour was logged.) Return one column: name. Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT p.name FROM projects p WHERE EXISTS (SELECT 1 FROM tasks t JOIN time_logs tl ON tl.task_id = t.task_id JOIN employees e ON e.employee_id = tl.employee_id WHERE t.project_id = p.project_id) AND NOT EXISTS (SELECT 1 FROM tasks t JOIN time_logs tl ON tl.task_id = t.task_id JOIN employees e ON e.employee_id = tl.employee_id WHERE t.project_id = p.project_id AND e.team <> 'Platform')",
+    "source": "Spider-style (curated, hardened)"
+  },
+  {
+    "id": "pt_q6",
+    "db_id": "project_tasks",
+    "tier": "candidate",
+    "order_matters": false,
+    "prompt": "Database schema (SQLite):\n\nTable projects(project_id, name, budget_hours, active) -- active: 1=yes, 0=no\nTable tasks(task_id, project_id, title, estimate_hours)\nTable employees(employee_id, name, team)\nTable task_assignments(task_id, employee_id, role)\nTable time_logs(log_id, task_id, employee_id, hours, log_date)\n\nQuestion: Find employee name(s) who logged hours on more than one distinct project. Return one column: name. Write a single SQLite SELECT statement.",
+    "gold_query": "SELECT e.name FROM employees e JOIN time_logs tl ON tl.employee_id = e.employee_id JOIN tasks t ON t.task_id = tl.task_id GROUP BY e.employee_id HAVING COUNT(DISTINCT t.project_id) > 1",
+    "source": "Spider-style (curated, hardened)"
+  }
+]

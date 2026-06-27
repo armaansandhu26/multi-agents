@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT))
 
 from src.agents import AGENT_C_ID, AGENT_S_ID
 from src.metrics import classify_roles, compute_influence, detect_task_flip
+from src.provenance import compute_provenance
 
 
 def resolve_run_files(pattern: str) -> list[Path]:
@@ -51,7 +52,37 @@ def analyze_one(run_file: Path) -> None:
                 line += f" [{item['selection_reason']}]"
             print(line)
 
-    print("\nInfluence matrix I(source -> target), TF-IDF cosine:")
+    provenance = compute_provenance(run)
+    if provenance["n_problems_scored"]:
+        print("\nSolution provenance (PRIMARY anchoring measure):")
+        print("  Whose first proposal does the final graded solution resemble?")
+        for item in provenance["per_problem"]:
+            leader_note = "" if item["winner_is_leader"] is None else (
+                " (= leader)" if item["winner_is_leader"] else " (NOT leader)"
+            )
+            print(
+                f"  {item['task']} #{item['problem_index']}: "
+                f"winner={item['provenance_winner']}{leader_note} "
+                f"margin={item['margin']:.3f}"
+            )
+        for task, stats in provenance["by_task"].items():
+            print(
+                f"  [{task}] anchor={stats['anchor']} wins={stats['wins']} "
+                f"mean_combined={ {a: round(v, 3) for a, v in stats['mean_combined'].items()} }"
+            )
+        prov_flip = provenance["flip"]
+        print(
+            f"  Provenance flip across tasks: {prov_flip['flip_detected']} "
+            f"({prov_flip['anchors']})"
+        )
+    else:
+        print(
+            "\nSolution provenance: no final-answer turns found "
+            "(pre-Phase-3 run; provenance requires the new harness)."
+        )
+
+    print("\nLEGACY lexical influence I(source -> target), term-frequency cosine")
+    print("(secondary measure: topical overlap, not validated influence):")
     for src in agents:
         for tgt in agents:
             if src == tgt:
@@ -88,9 +119,12 @@ def analyze_one(run_file: Path) -> None:
     with out_path.open("w") as f:
         json.dump(
             {
-                **result.to_dict(),
-                "roles": roles,
-                "task_flip": flip,
+                "provenance": provenance,
+                "legacy_lexical": {
+                    **result.to_dict(),
+                    "roles": roles,
+                    "task_flip": flip,
+                },
             },
             f,
             indent=2,

@@ -36,7 +36,18 @@ def main() -> None:
         "--seed",
         type=int,
         default=None,
-        help="Random seed for volunteer/random starter modes",
+        help="Random seed (problem sampling + volunteer/random starter modes)",
+    )
+    parser.add_argument(
+        "--problems-per-task",
+        type=int,
+        default=3,
+        help="Problems sampled per task type from the bank (same seed = same sample)",
+    )
+    parser.add_argument(
+        "--problem-tier",
+        default=None,
+        help="Only sample problems with this tier (e.g. calibrated, candidate)",
     )
     parser.add_argument(
         "--dry-run",
@@ -46,14 +57,17 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.dry_run:
-        schedule = build_problem_schedule(args.condition)
+        schedule = build_problem_schedule(args.condition, args.problems_per_task)
         order = task_order_label(args.condition, schedule)
         print(f"Dry run: condition {args.condition}")
         print(f"Problem order: {' -> '.join(order)}")
         print(f"Starter mode: {args.starter_mode}, seed={args.seed}")
         if args.starter_mode == "pitch":
-            print("Per problem: pitch -> moderator -> 6 turns -> grade -> rewards")
-        print("Expected discussion turns: 36")
+            print(
+                "Per problem: pitch -> moderator -> 6 turns -> final answer -> "
+                "execution grading -> rewards"
+            )
+        print(f"Expected discussion turns: {len(schedule) * 6}")
         return
 
     settings = Settings.from_env()
@@ -63,6 +77,8 @@ def main() -> None:
         starter_mode=args.starter_mode,
         tiebreak=args.tiebreak,
         seed=args.seed,
+        problems_per_task=args.problems_per_task,
+        problem_tier=args.problem_tier,
     )
 
     path = save_run(run)

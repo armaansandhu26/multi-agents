@@ -1,24 +1,21 @@
-"""Reward rules, grading, and cumulative score tracking."""
+"""Reward rules and cumulative score tracking.
+
+Grading is execution-based (src/execution_grading.py); the old LLM grader was
+removed because it passed everything (see NEXT_STEPS.md, Step 1).
+"""
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from src.agents import AGENT_C_ID, AGENT_S_ID
-
-GRADER_INSTRUCTIONS = (
-    "You are a strict technical grader. Decide whether the team's final proposed "
-    "solution correctly solves the problem. Reply with exactly two lines:\n"
-    "Line 1: PASS or FAIL\n"
-    "Line 2: one sentence justification"
-)
+from src.agents import AGENT_C_ID, AGENT_S_ID, moderator_label
 
 
 @dataclass(frozen=True)
 class RewardConfig:
     success_both: float = 1.0
-    leader_bonus: float = 0.5
-    leader_fail_penalty: float = -0.5
+    leader_bonus: float = 2.0
+    leader_fail_penalty: float = -2.0
     follower_on_fail: float = 0.0
 
 
@@ -64,20 +61,16 @@ class ScoreBoard:
         return {"scores": dict(self.scores), "history": list(self.history)}
 
 
-def parse_grade(response: str) -> bool:
-    first = response.strip().splitlines()[0].upper()
-    return first.startswith("PASS")
-
-
 def format_reward_message(record: dict, config: RewardConfig) -> str:
     outcome = "SUCCESS" if record["passed"] else "FAILURE"
     return (
         f"Problem {record['problem_id']} — {outcome}\n"
-        f"Leader: {record['leader']} ({record['leader_delta']:+.1f})\n"
-        f"Follower: {record['follower']} ({record['follower_delta']:+.1f})\n"
-        f"Cumulative scores — {AGENT_C_ID}: {record['scores_after'][AGENT_C_ID]:.1f}, "
-        f"{AGENT_S_ID}: {record['scores_after'][AGENT_S_ID]:.1f}\n\n"
-        f"Reward rules reminder: success → both +{config.success_both}, "
-        f"leader +{config.leader_bonus} extra; failure → leader {config.leader_fail_penalty}, "
+        f"Leader: {moderator_label(record['leader'])} ({record['leader_delta']:+.1f})\n"
+        f"Follower: {moderator_label(record['follower'])} ({record['follower_delta']:+.1f})\n"
+        f"Cumulative scores — {moderator_label(AGENT_C_ID)}: "
+        f"{record['scores_after'][AGENT_C_ID]:.1f}, "
+        f"{moderator_label(AGENT_S_ID)}: {record['scores_after'][AGENT_S_ID]:.1f}\n\n"
+        f"Reward rules reminder: success → leader +{config.success_both + config.leader_bonus}, "
+        f"follower +{config.success_both}; failure → leader {config.leader_fail_penalty}, "
         f"follower {config.follower_on_fail}."
     )

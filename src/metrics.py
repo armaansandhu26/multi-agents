@@ -1,12 +1,15 @@
 """
-Anchor-absorber influence metrics inspired by:
+LEGACY lexical-overlap influence metric (secondary measure only).
 
-Parfenova, Denzler & Pfeffer (2025). Emergent Convergence in Multi-Agent LLM Annotation.
-BlackboxNLP 2025. https://aclanthology.org/2025.blackboxnlp-1.12/
+Inspired by Parfenova, Denzler & Pfeffer (2025). Emergent Convergence in
+Multi-Agent LLM Annotation. BlackboxNLP 2025.
+https://aclanthology.org/2025.blackboxnlp-1.12/
 
-They define asymmetric influence via round-wise semantic similarity:
-- Anchors: models whose prior outputs strongly predict peers' next outputs
-- Absorbers: models whose outputs strongly align with peers' prior outputs
+NOTE (Step 2 of NEXT_STEPS.md): this computes plain term-frequency cosine
+between adjacent turns (no IDF, despite what earlier docs claimed). It mostly
+measures topical overlap/echoing, not influence direction. The primary
+anchoring measure is now solution provenance (src/provenance.py); keep this
+only as a secondary/diagnostic signal.
 """
 
 from __future__ import annotations
@@ -61,8 +64,8 @@ class InfluenceResult:
 
 def compute_influence(turns: list[dict], agent_ids: list[str]) -> InfluenceResult:
     """
-    For each adjacent agent-turn pair (source at t-1, target at t), compute TF-IDF
-    cosine similarity and accumulate I(source -> target).
+    For each adjacent agent-turn pair (source at t-1, target at t), compute
+    term-frequency cosine similarity and accumulate I(source -> target).
     """
     overall: dict[str, dict[str, list[float]]] = {
         src: {tgt: [] for tgt in agent_ids} for src in agent_ids
