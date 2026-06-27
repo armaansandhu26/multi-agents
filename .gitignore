@@ -4,6 +4,11 @@
 venv/
 __pycache__/
 *.pyc
-runs/
+runs/*
+!runs/views/
+runs/views/*
+!runs/views/*.html
+data/spider/spider_data.zip
+data/spider/spider/
 *.jsonl
 .DS_Store

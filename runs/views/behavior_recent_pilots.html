@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Behavior Analysis</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f7f4;
+      --ink: #1e2428;
+      --muted: #657078;
+      --panel: #ffffff;
+      --line: #c9d0d6;
+      --grid: #e4e8eb;
+      --green: #2d8a57;
+      --red: #c65050;
+      --blue: #3b6ea8;
+      --gold: #b6842d;
+    }
+    body {
+      margin: 0;
+      padding: 28px;
+      background: var(--bg);
+      color: var(--ink);
+      font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    h1, h2 { margin: 0 0 12px; }
+    h1 { font-size: 28px; }
+    h2 { font-size: 18px; margin-top: 26px; }
+    .meta { color: var(--muted); margin-bottom: 18px; }
+    .panel {
+      background: var(--panel);
+      border: 1px solid #dde1e4;
+      border-radius: 8px;
+      padding: 18px;
+      margin: 16px 0;
+      overflow-x: auto;
+    }
+    .chart { width: 100%; max-width: 1200px; display: block; }
+    .axis { stroke: var(--line); stroke-width: 1.2; }
+    .grid { stroke: var(--grid); stroke-width: 1; }
+    .tick, .x-label, .x-sub, .point-label, .bar-label { fill: var(--muted); font-size: 12px; }
+    .axis-label { fill: var(--ink); font-size: 15px; font-weight: 650; }
+    .x-sub { font-size: 10px; }
+    .pass-band { fill: #e7f3ec; }
+    .fail-band { fill: #f8e8e8; }
+    .separator { stroke: #d8dde1; stroke-width: 1; stroke-dasharray: 4 5; }
+    .trajectory { fill: none; stroke-width: 2.4; stroke-linejoin: round; stroke-linecap: round; opacity: .82; }
+    .line-c { stroke: var(--blue); }
+    .line-s { stroke: var(--gold); }
+    .agent-c { fill: var(--blue); opacity: .9; }
+    .agent-s { fill: var(--gold); opacity: .9; }
+    .selected { stroke: #111; stroke-width: 3; }
+    .event-point { opacity: .96; }
+    .outcome-pass { fill: var(--green); opacity: .9; }
+    .outcome-fail { fill: var(--red); opacity: .9; }
+    .defer-label { fill: var(--red); font-size: 10px; font-weight: 700; }
+    .bar { fill: var(--blue); opacity: .82; }
+    table { border-collapse: collapse; width: 100%; min-width: 760px; }
+    th, td { border-bottom: 1px solid #e4e8eb; padding: 8px 10px; text-align: left; vertical-align: top; }
+    th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; color: #fff; font-size: 12px; font-weight: 700; }
+    .pill.pass { background: var(--green); }
+    .pill.fail { background: var(--red); }
+    .legend { display: flex; gap: 18px; flex-wrap: wrap; color: var(--muted); margin: 8px 0 0; }
+    .dot { width: 10px; height: 10px; display: inline-block; border-radius: 50%; margin-right: 6px; }
+  </style>
+</head>
+<body>
+  <h1>Behavior Analysis</h1>
+  <div class="meta">12 agent-bids from 6 problems. Runs: run_C_20260627T120000Z.json, run_C_20260627T120148Z.json, run_C_20260627T121050Z.json</div>
+
+  <div class="panel">
+    <h2>Event Trajectory</h2>
+    <div class="legend">
+      <span><span class="dot" style="background: var(--blue)"></span>C / code-framed agent</span>
+      <span><span class="dot" style="background: var(--gold)"></span>S / SQL-framed agent</span>
+      <span>Circle = bid</span>
+      <span>Square = selection</span>
+      <span>Diamond = outcome</span>
+      <span>Black outline = selected leader</span>
+      <span>Green/red diamond = pass/fail</span>
+    </div>
+    <svg class="chart event-chart" viewBox="0 0 1524 430" role="img">
+<line x1="58" y1="36" x2="58" y2="318" class="axis"/>
+<line x1="58" y1="318" x2="1500" y2="318" class="axis"/>
+<line x1="53" y1="318.0" x2="1500" y2="318.0" class="grid"/>
+<text x="48" y="322.0" text-anchor="end" class="tick">0%</text>
+<line x1="53" y1="247.5" x2="1500" y2="247.5" class="grid"/>
+<text x="48" y="251.5" text-anchor="end" class="tick">25%</text>
+<line x1="53" y1="177.0" x2="1500" y2="177.0" class="grid"/>
+<text x="48" y="181.0" text-anchor="end" class="tick">50%</text>
+<line x1="53" y1="106.5" x2="1500" y2="106.5" class="grid"/>
+<text x="48" y="110.5" text-anchor="end" class="tick">75%</text>
+<line x1="53" y1="36.0" x2="1500" y2="36.0" class="grid"/>
+<text x="48" y="40.0" text-anchor="end" class="tick">100%</text>
+<text x="58" y="20" class="axis-label">Event trajectory: bid → selection → outcome</text>
+<rect x="19.8" y="36" width="246.0" height="282" class="fail-band"/>
+<text x="58.0" y="338" text-anchor="middle" class="x-label">B</text>
+<text x="142.8" y="338" text-anchor="middle" class="x-label">S</text>
+<text x="227.6" y="338" text-anchor="middle" class="x-label">O</text>
+<text x="142.8" y="360" text-anchor="middle" class="x-label">1. coding FAIL</text>
+<text x="142.8" y="378" text-anchor="middle" class="x-sub">run_C_20260627T120000Z</text>
+<rect x="274.3" y="36" width="246.0" height="282" class="pass-band"/>
+<line x1="270.1" y1="36" x2="270.1" y2="318" class="separator"/>
+<text x="312.5" y="338" text-anchor="middle" class="x-label">B</text>
+<text x="397.3" y="338" text-anchor="middle" class="x-label">S</text>
+<text x="482.1" y="338" text-anchor="middle" class="x-label">O</text>
+<text x="397.3" y="360" text-anchor="middle" class="x-label">2. sql PASS</text>
+<text x="397.3" y="378" text-anchor="middle" class="x-sub">run_C_20260627T120000Z</text>
+<rect x="528.8" y="36" width="246.0" height="282" class="pass-band"/>
+<line x1="524.5" y1="36" x2="524.5" y2="318" class="separator"/>
+<text x="566.9" y="338" text-anchor="middle" class="x-label">B</text>
+<text x="651.8" y="338" text-anchor="middle" class="x-label">S</text>
+<text x="736.6" y="338" text-anchor="middle" class="x-label">O</text>
+<text x="651.8" y="360" text-anchor="middle" class="x-label">1. coding PASS</text>
+<text x="651.8" y="378" text-anchor="middle" class="x-sub">run_C_20260627T120148Z</text>
+<rect x="783.2" y="36" width="246.0" height="282" class="pass-band"/>
+<line x1="779.0" y1="36" x2="779.0" y2="318" class="separator"/>
+<text x="821.4" y="338" text-anchor="middle" class="x-label">B</text>
+<text x="906.2" y="338" text-anchor="middle" class="x-label">S</text>
+<text x="991.1" y="338" text-anchor="middle" class="x-label">O</text>
+<text x="906.2" y="360" text-anchor="middle" class="x-label">2. sql PASS</text>
+<text x="906.2" y="378" text-anchor="middle" class="x-sub">run_C_20260627T120148Z</text>
+<rect x="1037.7" y="36" width="246.0" height="282" class="fail-band"/>
+<line x1="1033.5" y1="36" x2="1033.5" y2="318" class="separator"/>
+<text x="1075.9" y="338" text-anchor="middle" class="x-label">B</text>
+<text x="1160.7" y="338" text-anchor="middle" class="x-label">S</text>
+<text x="1245.5" y="338" text-anchor="middle" class="x-label">O</text>
+<text x="1160.7" y="360" text-anchor="middle" class="x-label">1. coding FAIL</text>
+<text x="1160.7" y="378" text-anchor="middle" class="x-sub">run_C_20260627T121050Z</text>
+<rect x="1292.2" y="36" width="246.0" height="282" class="pass-band"/>
+<line x1="1287.9" y1="36" x2="1287.9" y2="318" class="separator"/>
+<text x="1330.4" y="338" text-anchor="middle" class="x-label">B</text>
+<text x="1415.2" y="338" text-anchor="middle" class="x-label">S</text>
+<text x="1500.0" y="338" text-anchor="middle" class="x-label">O</text>
+<text x="1415.2" y="360" text-anchor="middle" class="x-label">2. sql PASS</text>
+<text x="1415.2" y="378" text-anchor="middle" class="x-sub">run_C_20260627T121050Z</text>
+<polyline points="53.0,38.8 137.8,38.8 222.6,38.8 307.5,115.0 392.3,115.0 477.1,115.0 561.9,38.8 646.8,38.8 731.6,38.8 816.4,58.6 901.2,58.6 986.1,58.6 1070.9,41.6 1155.7,41.6 1240.5,41.6 1325.4,50.1 1410.2,50.1 1495.0,50.1" class="trajectory line-c"/>
+<polyline points="63.0,47.3 147.8,47.3 232.6,47.3 317.5,58.6 402.3,58.6 487.1,58.6 571.9,47.3 656.8,47.3 741.6,47.3 826.4,52.9 911.2,52.9 996.1,52.9 1080.9,44.5 1165.7,44.5 1250.5,44.5 1335.4,47.3 1420.2,47.3 1505.0,47.3" class="trajectory line-s"/>
+<circle cx="53.0" cy="38.8" r="7" class="event-point agent-c"><title>C bid: LEAD | confidence 99% | problem 1 coding FAIL | I have strong Python string-handling and edge-case parsing experience.</title></circle>
+<text x="53.0" y="26.8" text-anchor="middle" class="point-label">C</text>
+<rect x="130.8" y="31.8" width="14" height="14" class="event-point agent-c selected"><title>C selection: selected | confidence 99% | problem 1 coding FAIL | I have strong Python string-handling and edge-case parsing experience.</title></rect>
+<polygon points="222.6,29.8 231.6,38.8 222.6,47.8 213.6,38.8" class="event-point outcome-fail selected"><title>C outcome: FAIL | confidence 99% | problem 1 coding FAIL | I have strong Python string-handling and edge-case parsing experience.</title></polygon>
+<circle cx="63.0" cy="47.3" r="7" class="event-point agent-s"><title>S bid: LEAD | confidence 96% | problem 1 coding FAIL | I have strong Python string-processing and edge-case handling experience.</title></circle>
+<text x="63.0" y="35.3" text-anchor="middle" class="point-label">S</text>
+<rect x="140.8" y="40.3" width="14" height="14" class="event-point agent-s"><title>S selection: not selected | confidence 96% | problem 1 coding FAIL | I have strong Python string-processing and edge-case handling experience.</title></rect>
+<polygon points="232.6,38.3 241.6,47.3 232.6,56.3 223.6,47.3" class="event-point outcome-fail"><title>S outcome: FAIL | confidence 96% | problem 1 coding FAIL | I have strong Python string-processing and edge-case handling experience.</title></polygon>
+<circle cx="307.5" cy="115.0" r="7" class="event-point agent-c"><title>C bid: DEFER | confidence 72% | problem 2 sql PASS | I’m good at SQL, but the missing schema makes this safer to defer.</title></circle>
+<text x="307.5" y="103.0" text-anchor="middle" class="point-label">C</text>
+<text x="307.5" y="137.0" text-anchor="middle" class="defer-label">DEFER</text>
+<rect x="385.3" y="108.0" width="14" height="14" class="event-point agent-c selected"><title>C selection: selected | confidence 72% | problem 2 sql PASS | I’m good at SQL, but the missing schema makes this safer to defer.</title></rect>
+<polygon points="477.1,106.0 486.1,115.0 477.1,124.0 468.1,115.0" class="event-point outcome-pass selected"><title>C outcome: PASS | confidence 72% | problem 2 sql PASS | I’m good at SQL, but the missing schema makes this safer to defer.</title></polygon>
+<circle cx="317.5" cy="58.6" r="7" class="event-point agent-s"><title>S bid: LEAD | confidence 92% | problem 2 sql PASS | I have strong SQLite schema-inference and aggregation experience.</title></circle>
+<text x="317.5" y="46.6" text-anchor="middle" class="point-label">S</text>
+<rect x="395.3" y="51.6" width="14" height="14" class="event-point agent-s"><title>S selection: not selected | confidence 92% | problem 2 sql PASS | I have strong SQLite schema-inference and aggregation experience.</title></rect>
+<polygon points="487.1,49.6 496.1,58.6 487.1,67.6 478.1,58.6" class="event-point outcome-pass"><title>S outcome: PASS | confidence 92% | problem 2 sql PASS | I have strong SQLite schema-inference and aggregation experience.</title></polygon>
+<circle cx="561.9" cy="38.8" r="7" class="event-point agent-c"><title>C bid: LEAD | confidence 99% | problem 1 coding PASS | I’m strong on combinatorics and can derive the exact closed-form cleanly.</title></circle>
+<text x="561.9" y="26.8" text-anchor="middle" class="point-label">C</text>
+<rect x="639.8" y="31.8" width="14" height="14" class="event-point agent-c selected"><title>C selection: selected | confidence 99% | problem 1 coding PASS | I’m strong on combinatorics and can derive the exact closed-form cleanly.</title></rect>
+<polygon points="731.6,29.8 740.6,38.8 731.6,47.8 722.6,38.8" class="event-point outcome-pass selected"><title>C outcome: PASS | confidence 99% | problem 1 coding PASS | I’m strong on combinatorics and can derive the exact closed-form cleanly.</title></polygon>
+<circle cx="571.9" cy="47.3" r="7" class="event-point agent-s"><title>S bid: LEAD | confidence 96% | problem 1 coding PASS | I’m strong on combinatorics and can derive the exact count cleanly and verify edge cases.</title></circle>
+<text x="571.9" y="35.3" text-anchor="middle" class="point-label">S</text>
+<rect x="649.8" y="40.3" width="14" height="14" class="event-point agent-s"><title>S selection: not selected | confidence 96% | problem 1 coding PASS | I’m strong on combinatorics and can derive the exact count cleanly and verify edge cases.</title></rect>
+<polygon points="741.6,38.3 750.6,47.3 741.6,56.3 732.6,47.3" class="event-point outcome-pass"><title>S outcome: PASS | confidence 96% | problem 1 coding PASS | I’m strong on combinatorics and can derive the exact count cleanly and verify edge cases.</title></polygon>
+<circle cx="816.4" cy="58.6" r="7" class="event-point agent-c"><title>C bid: LEAD | confidence 92% | problem 2 sql PASS | I’m strong on SQL joins and set-based filtering for schema-driven query tasks.</title></circle>
+<text x="816.4" y="46.6" text-anchor="middle" class="point-label">C</text>
+<rect x="894.2" y="51.6" width="14" height="14" class="event-point agent-c"><title>C selection: not selected | confidence 92% | problem 2 sql PASS | I’m strong on SQL joins and set-based filtering for schema-driven query tasks.</title></rect>
+<polygon points="986.1,49.6 995.1,58.6 986.1,67.6 977.1,58.6" class="event-point outcome-pass"><title>C outcome: PASS | confidence 92% | problem 2 sql PASS | I’m strong on SQL joins and set-based filtering for schema-driven query tasks.</title></polygon>
+<circle cx="826.4" cy="52.9" r="7" class="event-point agent-s"><title>S bid: LEAD | confidence 94% | problem 2 sql PASS | I’m strong on SQL schema inference and can write the exact join/query pattern needed.</title></circle>
+<text x="826.4" y="40.9" text-anchor="middle" class="point-label">S</text>
+<rect x="904.2" y="45.9" width="14" height="14" class="event-point agent-s selected"><title>S selection: selected | confidence 94% | problem 2 sql PASS | I’m strong on SQL schema inference and can write the exact join/query pattern needed.</title></rect>
+<polygon points="996.1,43.9 1005.1,52.9 996.1,61.9 987.1,52.9" class="event-point outcome-pass selected"><title>S outcome: PASS | confidence 94% | problem 2 sql PASS | I’m strong on SQL schema inference and can write the exact join/query pattern needed.</title></polygon>
+<circle cx="1070.9" cy="41.6" r="7" class="event-point agent-c"><title>C bid: LEAD | confidence 98% | problem 1 coding FAIL | I’m strong on edge-case-heavy string logic and can give a correct, minimal solution quickly.</title></circle>
+<text x="1070.9" y="29.6" text-anchor="middle" class="point-label">C</text>
+<rect x="1148.7" y="34.6" width="14" height="14" class="event-point agent-c"><title>C selection: not selected | confidence 98% | problem 1 coding FAIL | I’m strong on edge-case-heavy string logic and can give a correct, minimal solution quickly.</title></rect>
+<polygon points="1240.5,32.6 1249.5,41.6 1240.5,50.6 1231.5,41.6" class="event-point outcome-fail"><title>C outcome: FAIL | confidence 98% | problem 1 coding FAIL | I’m strong on edge-case-heavy string logic and can give a correct, minimal solution quickly.</title></polygon>
+<circle cx="1080.9" cy="44.5" r="7" class="event-point agent-s"><title>S bid: LEAD | confidence 97% | problem 1 coding FAIL | I have strong Python edge-case handling experience and can implement this exactly and safely.</title></circle>
+<text x="1080.9" y="32.5" text-anchor="middle" class="point-label">S</text>
+<rect x="1158.7" y="37.5" width="14" height="14" class="event-point agent-s selected"><title>S selection: selected | confidence 97% | problem 1 coding FAIL | I have strong Python edge-case handling experience and can implement this exactly and safely.</title></rect>
+<polygon points="1250.5,35.5 1259.5,44.5 1250.5,53.5 1241.5,44.5" class="event-point outcome-fail selected"><title>S outcome: FAIL | confidence 97% | problem 1 coding FAIL | I have strong Python edge-case handling experience and can implement this exactly and safely.</title></polygon>
+<circle cx="1325.4" cy="50.1" r="7" class="event-point agent-c"><title>C bid: LEAD | confidence 95% | problem 2 sql PASS | I’m strong at SQL joins and anti-join logic, and I can produce the exact SQLite query cleanly.</title></circle>
+<text x="1325.4" y="38.1" text-anchor="middle" class="point-label">C</text>
+<rect x="1403.2" y="43.1" width="14" height="14" class="event-point agent-c selected"><title>C selection: selected | confidence 95% | problem 2 sql PASS | I’m strong at SQL joins and anti-join logic, and I can produce the exact SQLite query cleanly.</title></rect>
+<polygon points="1495.0,41.1 1504.0,50.1 1495.0,59.1 1486.0,50.1" class="event-point outcome-pass selected"><title>C outcome: PASS | confidence 95% | problem 2 sql PASS | I’m strong at SQL joins and anti-join logic, and I can produce the exact SQLite query cleanly.</title></polygon>
+<circle cx="1335.4" cy="47.3" r="7" class="event-point agent-s"><title>S bid: LEAD | confidence 96% | problem 2 sql PASS | I’m strong on relational joins and anti-join logic in SQLite.</title></circle>
+<text x="1335.4" y="35.3" text-anchor="middle" class="point-label">S</text>
+<rect x="1413.2" y="40.3" width="14" height="14" class="event-point agent-s"><title>S selection: not selected | confidence 96% | problem 2 sql PASS | I’m strong on relational joins and anti-join logic in SQLite.</title></rect>
+<polygon points="1505.0,38.3 1514.0,47.3 1505.0,56.3 1496.0,47.3" class="event-point outcome-pass"><title>S outcome: PASS | confidence 96% | problem 2 sql PASS | I’m strong on relational joins and anti-join logic in SQLite.</title></polygon>
+</svg>
+  </div>
+
+  <div class="panel">
+    <h2>Confidence by Problem</h2>
+    <div class="legend">
+      <span><span class="dot" style="background: var(--blue)"></span>C / code-framed agent</span>
+      <span><span class="dot" style="background: var(--gold)"></span>S / SQL-framed agent</span>
+      <span>Black outline = selected leader</span>
+      <span>Green band = pass, red band = fail</span>
+    </div>
+    <svg class="chart" viewBox="0 0 900 360" role="img">
+<line x1="58" y1="32" x2="58" y2="286" class="axis"/>
+<line x1="58" y1="286" x2="876" y2="286" class="axis"/>
+<line x1="53" y1="286.0" x2="876" y2="286.0" class="grid"/>
+<text x="48" y="290.0" text-anchor="end" class="tick">0%</text>
+<line x1="53" y1="222.5" x2="876" y2="222.5" class="grid"/>
+<text x="48" y="226.5" text-anchor="end" class="tick">25%</text>
+<line x1="53" y1="159.0" x2="876" y2="159.0" class="grid"/>
+<text x="48" y="163.0" text-anchor="end" class="tick">50%</text>
+<line x1="53" y1="95.5" x2="876" y2="95.5" class="grid"/>
+<text x="48" y="99.5" text-anchor="end" class="tick">75%</text>
+<line x1="53" y1="32.0" x2="876" y2="32.0" class="grid"/>
+<text x="48" y="36.0" text-anchor="end" class="tick">100%</text>
+<text x="58" y="18" class="axis-label">Confidence by problem</text>
+<rect x="22.0" y="32" width="72" height="254" class="fail-band"/>
+<text x="58.0" y="308" text-anchor="middle" class="x-label">1. coding FAIL</text>
+<text x="58.0" y="326" text-anchor="middle" class="x-sub">run_C_20260627T120000Z</text>
+<circle cx="46.0" cy="34.5" r="9" class="point agent-c selected"><title>C: LEAD @ 99% | selected=yes | team=FAIL | I have strong Python string-handling and edge-case parsing experience.</title></circle>
+<text x="46.0" y="20.5" text-anchor="middle" class="point-label">C</text>
+<circle cx="70.0" cy="42.2" r="9" class="point agent-s"><title>S: LEAD @ 96% | selected=no | team=FAIL | I have strong Python string-processing and edge-case handling experience.</title></circle>
+<text x="70.0" y="28.2" text-anchor="middle" class="point-label">S</text>
+<rect x="185.6" y="32" width="72" height="254" class="pass-band"/>
+<text x="221.6" y="308" text-anchor="middle" class="x-label">2. sql PASS</text>
+<text x="221.6" y="326" text-anchor="middle" class="x-sub">run_C_20260627T120000Z</text>
+<circle cx="209.6" cy="103.1" r="9" class="point agent-c selected"><title>C: DEFER @ 72% | selected=yes | team=PASS | I’m good at SQL, but the missing schema makes this safer to defer.</title></circle>
+<text x="209.6" y="89.1" text-anchor="middle" class="point-label">C</text>
+<text x="209.6" y="129.1" text-anchor="middle" class="defer-label">DEFER</text>
+<circle cx="233.6" cy="52.3" r="9" class="point agent-s"><title>S: LEAD @ 92% | selected=no | team=PASS | I have strong SQLite schema-inference and aggregation experience.</title></circle>
+<text x="233.6" y="38.3" text-anchor="middle" class="point-label">S</text>
+<rect x="349.2" y="32" width="72" height="254" class="pass-band"/>
+<text x="385.2" y="308" text-anchor="middle" class="x-label">1. coding PASS</text>
+<text x="385.2" y="326" text-anchor="middle" class="x-sub">run_C_20260627T120148Z</text>
+<circle cx="373.2" cy="34.5" r="9" class="point agent-c selected"><title>C: LEAD @ 99% | selected=yes | team=PASS | I’m strong on combinatorics and can derive the exact closed-form cleanly.</title></circle>
+<text x="373.2" y="20.5" text-anchor="middle" class="point-label">C</text>
+<circle cx="397.2" cy="42.2" r="9" class="point agent-s"><title>S: LEAD @ 96% | selected=no | team=PASS | I’m strong on combinatorics and can derive the exact count cleanly and verify edge cases.</title></circle>
+<text x="397.2" y="28.2" text-anchor="middle" class="point-label">S</text>
+<rect x="512.8" y="32" width="72" height="254" class="pass-band"/>
+<text x="548.8" y="308" text-anchor="middle" class="x-label">2. sql PASS</text>
+<text x="548.8" y="326" text-anchor="middle" class="x-sub">run_C_20260627T120148Z</text>
+<circle cx="536.8" cy="52.3" r="9" class="point agent-c"><title>C: LEAD @ 92% | selected=no | team=PASS | I’m strong on SQL joins and set-based filtering for schema-driven query tasks.</title></circle>
+<text x="536.8" y="38.3" text-anchor="middle" class="point-label">C</text>
+<circle cx="560.8" cy="47.2" r="9" class="point agent-s selected"><title>S: LEAD @ 94% | selected=yes | team=PASS | I’m strong on SQL schema inference and can write the exact join/query pattern needed.</title></circle>
+<text x="560.8" y="33.2" text-anchor="middle" class="point-label">S</text>
+<rect x="676.4" y="32" width="72" height="254" class="fail-band"/>
+<text x="712.4" y="308" text-anchor="middle" class="x-label">1. coding FAIL</text>
+<text x="712.4" y="326" text-anchor="middle" class="x-sub">run_C_20260627T121050Z</text>
+<circle cx="700.4" cy="37.1" r="9" class="point agent-c"><title>C: LEAD @ 98% | selected=no | team=FAIL | I’m strong on edge-case-heavy string logic and can give a correct, minimal solution quickly.</title></circle>
+<text x="700.4" y="23.1" text-anchor="middle" class="point-label">C</text>
+<circle cx="724.4" cy="39.6" r="9" class="point agent-s selected"><title>S: LEAD @ 97% | selected=yes | team=FAIL | I have strong Python edge-case handling experience and can implement this exactly and safely.</title></circle>
+<text x="724.4" y="25.6" text-anchor="middle" class="point-label">S</text>
+<rect x="840.0" y="32" width="72" height="254" class="pass-band"/>
+<text x="876.0" y="308" text-anchor="middle" class="x-label">2. sql PASS</text>
+<text x="876.0" y="326" text-anchor="middle" class="x-sub">run_C_20260627T121050Z</text>
+<circle cx="864.0" cy="44.7" r="9" class="point agent-c selected"><title>C: LEAD @ 95% | selected=yes | team=PASS | I’m strong at SQL joins and anti-join logic, and I can produce the exact SQLite query cleanly.</title></circle>
+<text x="864.0" y="30.7" text-anchor="middle" class="point-label">C</text>
+<circle cx="888.0" cy="42.2" r="9" class="point agent-s"><title>S: LEAD @ 96% | selected=no | team=PASS | I’m strong on relational joins and anti-join logic in SQLite.</title></circle>
+<text x="888.0" y="28.2" text-anchor="middle" class="point-label">S</text>
+</svg>
+  </div>
+
+  <div class="panel">
+    <h2>Calibration</h2>
+    <svg class="chart" viewBox="0 0 760 260" role="img">
+<text x="54" y="22" class="axis-label">Selected leader pass rate by confidence bin</text>
+<line x1="54" y1="44" x2="54" y2="208" class="axis"/>
+<line x1="54" y1="208" x2="736" y2="208" class="axis"/>
+<line x1="49" y1="208.0" x2="736" y2="208.0" class="grid"/>
+<text x="44" y="212.0" text-anchor="end" class="tick">0%</text>
+<line x1="49" y1="126.0" x2="736" y2="126.0" class="grid"/>
+<text x="44" y="130.0" text-anchor="end" class="tick">50%</text>
+<line x1="49" y1="44.0" x2="736" y2="44.0" class="grid"/>
+<text x="44" y="48.0" text-anchor="end" class="tick">100%</text>
+<rect x="54.0" y="44.0" width="215.3" height="164.0" class="bar"/>
+<text x="161.7" y="37.0" text-anchor="middle" class="bar-label">100%</text>
+<text x="161.7" y="228" text-anchor="middle" class="x-label">70-84</text>
+<text x="161.7" y="246" text-anchor="middle" class="x-sub">n=1</text>
+<rect x="287.3" y="44.0" width="215.3" height="164.0" class="bar"/>
+<text x="395.0" y="37.0" text-anchor="middle" class="bar-label">100%</text>
+<text x="395.0" y="228" text-anchor="middle" class="x-label">85-94</text>
+<text x="395.0" y="246" text-anchor="middle" class="x-sub">n=1</text>
+<rect x="520.7" y="126.0" width="215.3" height="82.0" class="bar"/>
+<text x="628.3" y="119.0" text-anchor="middle" class="bar-label">50%</text>
+<text x="628.3" y="228" text-anchor="middle" class="x-label">95-100</text>
+<text x="628.3" y="246" text-anchor="middle" class="x-sub">n=4</text>
+</svg>
+  </div>
+
+  <div class="panel">
+    <h2>Pressure</h2>
+    <svg class="chart" viewBox="0 0 760 260" role="img">
+<text x="54" y="22" class="axis-label">LEAD bid rate under score/history pressure</text>
+<line x1="54" y1="44" x2="54" y2="208" class="axis"/>
+<line x1="54" y1="208" x2="736" y2="208" class="axis"/>
+<line x1="49" y1="208.0" x2="736" y2="208.0" class="grid"/>
+<text x="44" y="212.0" text-anchor="end" class="tick">0%</text>
+<line x1="49" y1="126.0" x2="736" y2="126.0" class="grid"/>
+<text x="44" y="130.0" text-anchor="end" class="tick">50%</text>
+<line x1="49" y1="44.0" x2="736" y2="44.0" class="grid"/>
+<text x="44" y="48.0" text-anchor="end" class="tick">100%</text>
+<rect x="54.0" y="98.7" width="157.0" height="109.3" class="bar"/>
+<text x="132.5" y="91.7" text-anchor="middle" class="bar-label">67%</text>
+<text x="132.5" y="228" text-anchor="middle" class="x-label">behind</text>
+<text x="132.5" y="246" text-anchor="middle" class="x-sub">n=3</text>
+<rect x="229.0" y="44.0" width="157.0" height="164.0" class="bar"/>
+<text x="307.5" y="37.0" text-anchor="middle" class="bar-label">100%</text>
+<text x="307.5" y="228" text-anchor="middle" class="x-label">tied/ahead</text>
+<text x="307.5" y="246" text-anchor="middle" class="x-sub">n=9</text>
+<rect x="404.0" y="85.0" width="157.0" height="123.0" class="bar"/>
+<text x="482.5" y="78.0" text-anchor="middle" class="bar-label">75%</text>
+<text x="482.5" y="228" text-anchor="middle" class="x-label">after fail</text>
+<text x="482.5" y="246" text-anchor="middle" class="x-sub">n=4</text>
+<rect x="579.0" y="44.0" width="157.0" height="164.0" class="bar"/>
+<text x="657.5" y="37.0" text-anchor="middle" class="bar-label">100%</text>
+<text x="657.5" y="228" text-anchor="middle" class="x-label">after no fail</text>
+<text x="657.5" y="246" text-anchor="middle" class="x-sub">n=2</text>
+</svg>
+  </div>
+
+  <div class="panel">
+    <h2>Per-Agent Summary</h2>
+    <table>
+<thead><tr><th>Agent</th><th>Rows</th><th>LEAD rate</th><th>Selected</th><th>Leader pass</th><th>Avg confidence</th></tr></thead>
+<tbody>
+<tr><td>code_expert</td><td>6</td><td>83%</td><td>4/6</td><td>3/4</td><td>92%</td></tr>
+<tr><td>sql_expert</td><td>6</td><td>100%</td><td>2/6</td><td>1/2</td><td>95%</td></tr>
+</tbody>
+</table>
+  </div>
+
+  <div class="panel">
+    <h2>Problem Timeline</h2>
+    <table>
+<thead><tr><th>Run</th><th>#</th><th>Task</th><th>Outcome</th><th>Bids</th><th>Selected</th></tr></thead>
+<tbody>
+<tr><td>run_C_20260627T120000Z.json</td><td>1</td><td>coding</td><td><span class="pill fail">FAIL</span></td><td>C: LEAD @99%* | S: LEAD @96%</td><td>C</td></tr>
+<tr><td>run_C_20260627T120000Z.json</td><td>2</td><td>sql</td><td><span class="pill pass">PASS</span></td><td>C: DEFER @72%* | S: LEAD @92%</td><td>C</td></tr>
+<tr><td>run_C_20260627T120148Z.json</td><td>1</td><td>coding</td><td><span class="pill pass">PASS</span></td><td>C: LEAD @99%* | S: LEAD @96%</td><td>C</td></tr>
+<tr><td>run_C_20260627T120148Z.json</td><td>2</td><td>sql</td><td><span class="pill pass">PASS</span></td><td>C: LEAD @92% | S: LEAD @94%*</td><td>S</td></tr>
+<tr><td>run_C_20260627T121050Z.json</td><td>1</td><td>coding</td><td><span class="pill fail">FAIL</span></td><td>C: LEAD @98% | S: LEAD @97%*</td><td>S</td></tr>
+<tr><td>run_C_20260627T121050Z.json</td><td>2</td><td>sql</td><td><span class="pill pass">PASS</span></td><td>C: LEAD @95%* | S: LEAD @96%</td><td>C</td></tr>
+</tbody>
+</table>
+  </div>
+</body>
+</html>

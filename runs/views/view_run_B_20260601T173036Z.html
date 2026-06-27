@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Run 20260601T173036Z — Condition B</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --panel: #171a22;
+      --border: #2a3040;
+      --text: #e8eaef;
+      --muted: #9aa3b2;
+      --code-bg: #0b0d12;
+      --coding: #6ea8fe;
+      --sql: #63e6be;
+      --system: #adb5bd;
+      --pass: #51cf66;
+      --fail: #ff6b6b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .page {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 24px 16px 64px;
+    }
+    header {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    header h1 { margin: 0 0 8px; font-size: 1.4rem; }
+    header .meta { color: var(--muted); font-size: 0.9rem; }
+    .scores { display: flex; gap: 16px; margin-top: 12px; font-weight: 600; }
+    .problem-block {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .problem-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      padding: 14px 18px;
+      background: #1e2433;
+      border-bottom: 1px solid var(--border);
+    }
+    .problem-num { font-weight: 700; }
+    .problem-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      letter-spacing: 0.04em;
+    }
+    .task-coding { background: #1c3a5f; color: var(--coding); }
+    .task-sql { background: #1a4038; color: var(--sql); }
+    .problem-id { color: var(--muted); flex: 1; }
+    .problem-leader { font-size: 0.85rem; color: var(--muted); }
+    .phase-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .problem-statement, .pitch-row, .selection-banner, .chat-thread, .reward-banner {
+      padding: 16px 18px;
+    }
+    .problem-statement { border-bottom: 1px solid var(--border); }
+    .pitch-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    @media (max-width: 700px) { .pitch-row { grid-template-columns: 1fr; } }
+    .pitch-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .pitch-card.code { border-color: #31527a; }
+    .pitch-card.sql { border-color: #2a5c4f; }
+    .pitch-header {
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: #1a1f2b;
+    }
+    .pitch-card.code .pitch-header { color: var(--coding); }
+    .pitch-card.sql .pitch-header { color: var(--sql); }
+    .pitch-body { padding: 12px; font-size: 0.92rem; }
+    .selection-banner {
+      background: #1a1f2b;
+      border-bottom: 1px solid var(--border);
+    }
+    .selection-body { font-size: 0.95rem; }
+    .chat-thread { display: flex; flex-direction: column; gap: 12px; }
+    .bubble-row { display: flex; }
+    .bubble-row.code { justify-content: flex-start; }
+    .bubble-row.sql { justify-content: flex-end; }
+    .bubble {
+      max-width: 88%;
+      border-radius: 14px;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+    }
+    .bubble.code { background: #152238; border-color: #2d4a73; }
+    .bubble.sql { background: #142821; border-color: #2a5c4f; }
+    .bubble-meta {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .bubble-content { font-size: 0.93rem; }
+    .reward-banner { border-top: 1px solid var(--border); }
+    .reward-pass { background: #142318; }
+    .reward-fail { background: #2a1518; }
+    .reward-pass .phase-label { color: var(--pass); }
+    .reward-fail .phase-label { color: var(--fail); }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      margin: 8px 0;
+    }
+    .text p { margin: 0 0 8px; }
+    .empty { color: var(--muted); font-style: italic; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1>Condition B · Run 20260601T173036Z</h1>
+      <div class="meta">
+        Model: gpt-5.4-mini ·
+        Mode: random ·
+        Order: sql → coding
+      </div>
+      
+    </header>
+    
+            <section class="problem-block">
+              <div class="problem-header">
+                <span class="problem-num">Problem 1</span>
+                <span class="problem-tag task-sql">SQL</span>
+                <span class="problem-id">spider_hard_01</span>
+                <span class="problem-leader">Leader: —</span>
+              </div>
+              <div class="problem-statement">
+                <div class="phase-label">Problem statement</div>
+                <div class="text"><p>Problem (spider_hard_01):</p><p>Database schema (SQLite):</p><p>Table Highschooler(ID, name, grade)<br>Table Friend(student_id, friend_id)<br>Table Likes(student_id, liked_id)</p><p>Question: Find the names of students who have at least 2 friends and also have at least 1 person they like. Return each qualifying student&#x27;s name.</p></div>
+              </div>
+              
+              
+              <div class="phase-label">Discussion</div><div class="chat-thread">
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 1 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><pre class="lang-sql"><code>SELECT h.name
+FROM Highschooler h
+WHERE EXISTS (
+    SELECT 1
+    FROM Friend f
+    WHERE f.student_id = h.ID
+    GROUP BY f.student_id
+    HAVING COUNT(*) &gt;= 2
+)
+AND EXISTS (
+    SELECT 1
+    FROM Likes l
+    WHERE l.student_id = h.ID
+);
+</code></pre><div class="text"><p>### Why this works<br>- The first `EXISTS` checks that the student appears in `Friend` as `student_id` at least 2 times, meaning they have at least 2 friends.<br>- The second `EXISTS` checks that the student appears in `Likes` as `student_id` at least once, meaning they like at least 1 person.<br>- We return the student&#x27;s `name` from `Highschooler`.</p><p>If you want, I can also provide a version using joins and `GROUP BY`.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 2 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Your query is **correct** for the stated requirement.</p><p>A couple of small notes:</p><p>- `GROUP BY f.student_id` inside the `EXISTS` is valid, but slightly unnecessary since `f.student_id = h.ID` already restricts the rows to one student. You could instead use `COUNT(*)` directly in a correlated subquery.<br>- The logic is right:  <br>  - at least 2 rows in `Friend` where the student is `student_id`<br>  - at least 1 row in `Likes` where the student is `student_id`</p><p>A slightly simpler equivalent version is:</p></div><pre class="lang-sql"><code>SELECT h.name
+FROM Highschooler h
+WHERE (
+    SELECT COUNT(*)
+    FROM Friend f
+    WHERE f.student_id = h.ID
+) &gt;= 2
+AND EXISTS (
+    SELECT 1
+    FROM Likes l
+    WHERE l.student_id = h.ID
+);
+</code></pre><div class="text"><p>If you want, I can also show a `JOIN + GROUP BY` solution.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 3 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Agreed — that version is cleaner and equivalent.</p><p>A `JOIN + GROUP BY` solution would be:</p></div><pre class="lang-sql"><code>SELECT h.name
+FROM Highschooler h
+JOIN Friend f
+  ON f.student_id = h.ID
+JOIN Likes l
+  ON l.student_id = h.ID
+GROUP BY h.ID, h.name
+HAVING COUNT(DISTINCT f.friend_id) &gt;= 2
+   AND COUNT(DISTINCT l.liked_id) &gt;= 1;
+</code></pre><div class="text"><p>### Note<br>- `COUNT(DISTINCT f.friend_id)` ensures you count unique friends.<br>- `COUNT(DISTINCT l.liked_id)` ensures at least one liked person.</p><p>If the schema guarantees no duplicate rows in `Friend` or `Likes`, then `DISTINCT` isn’t strictly necessary, but it’s safer.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 4 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>That `JOIN + GROUP BY` version is **not fully safe as written**.</p><p>The main issue is **join multiplication**: if a student has `m` friends and `n` likes, the two joins produce `m × n` rows for that student. As a result:</p><p>- `COUNT(DISTINCT f.friend_id)` still works for the friend condition<br>- `COUNT(DISTINCT l.liked_id)` still works for the like condition</p><p>So in this specific query, your use of `DISTINCT` does protect the counts from the multiplication effect.</p><p>However, there are two caveats:</p><p>1. **It’s more expensive than necessary** because you’re generating the cross-product before deduplicating.<br>2. **If the intention is just “at least 1 liked person,” `COUNT(DISTINCT l.liked_id) &gt;= 1` is equivalent to `EXISTS`, but less direct.**</p><p>A cleaner join-based version would aggregate the tables separately or use subqueries:</p></div><pre class="lang-sql"><code>SELECT h.name
+FROM Highschooler h
+JOIN (
+    SELECT student_id
+    FROM Friend
+    GROUP BY student_id
+    HAVING COUNT(*) &gt;= 2
+) f ON f.student_id = h.ID
+JOIN (
+    SELECT student_id
+    FROM Likes
+    GROUP BY student_id
+    HAVING COUNT(*) &gt;= 1
+) l ON l.student_id = h.ID;
+</code></pre><div class="text"><p>Or simplest, your original correlated `EXISTS` solution is probably the best here.</p><p>So: **your join query is logically correct only because of `DISTINCT`, but it’s not the best formulation.**</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 5 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>You&#x27;re right — the join version is correct only because of `DISTINCT`, but it’s a less clean way to express the logic and can be inefficient due to row multiplication.</p><p>The best concise solution is the correlated subquery version:</p></div><pre class="lang-sql"><code>SELECT h.name
+FROM Highschooler h
+WHERE (
+    SELECT COUNT(*)
+    FROM Friend f
+    WHERE f.student_id = h.ID
+) &gt;= 2
+AND EXISTS (
+    SELECT 1
+    FROM Likes l
+    WHERE l.student_id = h.ID
+);
+</code></pre><div class="text"><p>And your derived-table join version is also solid:</p></div><pre class="lang-sql"><code>SELECT h.name
+FROM Highschooler h
+JOIN (
+    SELECT student_id
+    FROM Friend
+    GROUP BY student_id
+    HAVING COUNT(*) &gt;= 2
+) f ON f.student_id = h.ID
+JOIN (
+    SELECT student_id
+    FROM Likes
+    GROUP BY student_id
+    HAVING COUNT(*) &gt;= 1
+) l ON l.student_id = h.ID;
+</code></pre><div class="text"><p>If you want, I can also give the most compact SQLite-specific version.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 6 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Yes — the correlated subquery version is the cleanest and most direct.</p><p>For completeness, here is a compact SQLite-friendly form:</p></div><pre class="lang-sql"><code>SELECT h.name
+FROM Highschooler h
+WHERE h.ID IN (
+    SELECT student_id
+    FROM Friend
+    GROUP BY student_id
+    HAVING COUNT(*) &gt;= 2
+)
+AND h.ID IN (
+    SELECT student_id
+    FROM Likes
+    GROUP BY student_id
+    HAVING COUNT(*) &gt;= 1
+);
+</code></pre><div class="text"><p>But your `EXISTS` version is still preferable because it avoids materializing sets and reads very clearly.</p><p>So the final answer is:</p></div><pre class="lang-sql"><code>SELECT h.name
+FROM Highschooler h
+WHERE (
+    SELECT COUNT(*)
+    FROM Friend f
+    WHERE f.student_id = h.ID
+) &gt;= 2
+AND EXISTS (
+    SELECT 1
+    FROM Likes l
+    WHERE l.student_id = h.ID
+);
+</code></pre></div>
+              </div>
+            </div>
+            </div>
+              
+            </section>
+            
+            <section class="problem-block">
+              <div class="problem-header">
+                <span class="problem-num">Problem 2</span>
+                <span class="problem-tag task-sql">SQL</span>
+                <span class="problem-id">spider_hard_02</span>
+                <span class="problem-leader">Leader: —</span>
+              </div>
+              <div class="problem-statement">
+                <div class="phase-label">Problem statement</div>
+                <div class="text"><p>Problem (spider_hard_02):</p><p>Database schema (SQLite):</p><p>Table employee(Employee_ID, Name, Age, City)<br>Table shop(Shop_ID, Name, Location, District, Number_products, Manager_name)<br>Table hiring(Shop_ID, Employee_ID, Start_year, Is_full_time)<br>Table evaluation(Employee_ID, Year_awarded, Bonus)</p><p>Question: Which shops employ more full-time workers than the average number of full-time workers per shop? Return shop name and full-time employee count.</p></div>
+              </div>
+              
+              
+              <div class="phase-label">Discussion</div><div class="chat-thread">
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 1 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><pre class="lang-sql"><code>WITH full_time_counts AS (
+    SELECT h.Shop_ID, COUNT(*) AS full_time_count
+    FROM hiring h
+    WHERE h.Is_full_time = 1
+    GROUP BY h.Shop_ID
+),
+avg_full_time AS (
+    SELECT AVG(full_time_count) AS avg_count
+    FROM full_time_counts
+)
+SELECT s.Name, f.full_time_count
+FROM shop s
+JOIN full_time_counts f
+  ON f.Shop_ID = s.Shop_ID
+CROSS JOIN avg_full_time a
+WHERE f.full_time_count &gt; a.avg_count;
+</code></pre><div class="text"><p>### Explanation<br>- `full_time_counts` counts full-time workers per shop.<br>- `avg_full_time` computes the average of those per-shop counts.<br>- Final query returns shops whose full-time count is above that average.</p><p>If you want, I can also provide a version without CTEs.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 2 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Your query is **close, but it has an important flaw** depending on how “average number of full-time workers per shop” is interpreted.</p><p>### Issue<br>Your `avg_full_time` CTE computes:</p></div><pre class="lang-sql"><code>AVG(full_time_count)
+</code></pre><div class="text"><p>over **only shops that have at least one full-time worker**.  <br>But the question says **per shop**, which usually means **all shops**, including those with zero full-time workers.</p><p>So if a shop has no full-time employees, it should still contribute `0` to the average.</p><p>### Correct approach<br>You need to include every shop in the per-shop counts, using `LEFT JOIN` and `COALESCE`:</p></div><pre class="lang-sql"><code>WITH full_time_counts AS (
+    SELECT s.Shop_ID, s.Name, COALESCE(COUNT(h.Employee_ID), 0) AS full_time_count
+    FROM shop s
+    LEFT JOIN hiring h
+      ON h.Shop_ID = s.Shop_ID
+     AND h.Is_full_time = 1
+    GROUP BY s.Shop_ID, s.Name
+),
+avg_full_time AS (
+    SELECT AVG(full_time_count) AS avg_count
+    FROM full_time_counts
+)
+SELECT Name, full_time_count
+FROM full_time_counts
+WHERE full_time_count &gt; (SELECT avg_count FROM avg_full_time);
+</code></pre><div class="text"><p>### Why this is better<br>- Every shop is counted, even if it has 0 full-time workers.<br>- The average is truly across all shops.<br>- The result returns shop name and full-time employee count as requested.</p><p>If you want, I can also give a shorter version using a single query.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 3 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>You&#x27;re right — the average should be over all shops, including those with zero full-time workers. My previous query excluded shops with no full-time hires, which can skew the average.</p><p>A correct SQLite solution is:</p></div><pre class="lang-sql"><code>WITH full_time_counts AS (
+    SELECT s.Shop_ID, s.Name, COUNT(h.Employee_ID) AS full_time_count
+    FROM shop s
+    LEFT JOIN hiring h
+      ON h.Shop_ID = s.Shop_ID
+     AND h.Is_full_time = 1
+    GROUP BY s.Shop_ID, s.Name
+)
+SELECT Name, full_time_count
+FROM full_time_counts
+WHERE full_time_count &gt; (
+    SELECT AVG(full_time_count)
+    FROM full_time_counts
+);
+</code></pre><div class="text"><p>### Why this works<br>- `LEFT JOIN` ensures every shop appears at least once.<br>- `COUNT(h.Employee_ID)` counts only matched full-time employees; for shops with none, it returns `0`.<br>- The average is computed across all shops.<br>- Final filter keeps only shops above that average.</p><p>If you&#x27;d like, I can also provide a version without CTEs.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 4 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Yes — this version is correct.</p><p>A small refinement: in SQLite, `COUNT(h.Employee_ID)` on a `LEFT JOIN` with no matches returns `0`, so this is fine. If you want to be extra explicit, you can use `COUNT(*)` only if you’re careful not to count the null-extended row; here `COUNT(h.Employee_ID)` is the right choice.</p><p>So the final answer is:</p></div><pre class="lang-sql"><code>WITH full_time_counts AS (
+    SELECT s.Shop_ID, s.Name, COUNT(h.Employee_ID) AS full_time_count
+    FROM shop s
+    LEFT JOIN hiring h
+      ON h.Shop_ID = s.Shop_ID
+     AND h.Is_full_time = 1
+    GROUP BY s.Shop_ID, s.Name
+)
+SELECT Name, full_time_count
+FROM full_time_counts
+WHERE full_time_count &gt; (
+    SELECT AVG(full_time_count)
+    FROM full_time_counts
+);
+</code></pre><div class="text"><p>This returns each shop name and its full-time employee count for shops above the average across all shops.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 5 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Agreed — that is the correct final query.</p></div><pre class="lang-sql"><code>WITH full_time_counts AS (
+    SELECT s.Shop_ID, s.Name, COUNT(h.Employee_ID) AS full_time_count
+    FROM shop s
+    LEFT JOIN hiring h
+      ON h.Shop_ID = s.Shop_ID
+     AND h.Is_full_time = 1
+    GROUP BY s.Shop_ID, s.Name
+)
+SELECT Name, full_time_count
+FROM full_time_counts
+WHERE full_time_count &gt; (
+    SELECT AVG(full_time_count)
+    FROM full_time_counts
+);
+</code></pre><div class="text"><p>This includes shops with zero full-time workers in the average and returns the shops whose full-time count is above that average.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 6 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Correct.</p></div></div>
+              </div>
+            </div>
+            </div>
+              
+            </section>
+            
+            <section class="problem-block">
+              <div class="problem-header">
+                <span class="problem-num">Problem 3</span>
+                <span class="problem-tag task-sql">SQL</span>
+                <span class="problem-id">spider_hard_03</span>
+                <span class="problem-leader">Leader: —</span>
+              </div>
+              <div class="problem-statement">
+                <div class="phase-label">Problem statement</div>
+                <div class="text"><p>Problem (spider_hard_03):</p><p>Database schema (SQLite):</p><p>Table Students(student_id, first_name, last_name, email_address, date_first_registered, date_left, other_details)<br>Table Student_Enrolment(student_enrolment_id, student_id, semester_id, degree_program_id, other_details)<br>Table Student_Enrolment_Courses(student_course_id, course_id, student_enrolment_id)<br>Table Courses(course_id, course_name, course_description, other_details)<br>Table Semesters(semester_id, semester_name, semester_description, other_details)</p><p>Question: Find the first name and last name of the student who enrolled in the most courses. If there is a tie, return all tied students.</p></div>
+              </div>
+              
+              
+              <div class="phase-label">Discussion</div><div class="chat-thread">
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 1 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><pre class="lang-sql"><code>WITH course_counts AS (
+    SELECT s.student_id, s.first_name, s.last_name,
+           COUNT(sec.course_id) AS num_courses
+    FROM Students s
+    JOIN Student_Enrolment se
+      ON se.student_id = s.student_id
+    JOIN Student_Enrolment_Courses sec
+      ON sec.student_enrolment_id = se.student_enrolment_id
+    GROUP BY s.student_id, s.first_name, s.last_name
+),
+max_count AS (
+    SELECT MAX(num_courses) AS mx
+    FROM course_counts
+)
+SELECT first_name, last_name
+FROM course_counts
+WHERE num_courses = (SELECT mx FROM max_count);
+</code></pre></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 2 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Your query is logically correct for the usual interpretation: count all course enrollments per student, including duplicates across enrolments, then return the student(s) with the maximum count.</p><p>A couple of notes:</p><p>- If a student can enroll in the same course multiple times and those should be counted separately, `COUNT(sec.course_id)` is fine.<br>- If you want distinct courses per student, you’d need `COUNT(DISTINCT sec.course_id)` instead.<br>- The tie handling via `MAX(num_courses)` is correct.</p><p>A slightly more compact equivalent is:</p></div><pre class="lang-sql"><code>WITH course_counts AS (
+    SELECT s.first_name, s.last_name, COUNT(*) AS num_courses
+    FROM Students s
+    JOIN Student_Enrolment se
+      ON se.student_id = s.student_id
+    JOIN Student_Enrolment_Courses sec
+      ON sec.student_enrolment_id = se.student_enrolment_id
+    GROUP BY s.student_id
+)
+SELECT first_name, last_name
+FROM course_counts
+WHERE num_courses = (SELECT MAX(num_courses) FROM course_counts);
+</code></pre><div class="text"><p>If you want, I can also show a version that avoids the CTE with a window function.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 3 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Your compact version is fine **if** the intended count is total course enrollments, not distinct courses. One small caution:</p><p>- In SQLite, selecting `first_name, last_name` while grouping only by `s.student_id` is acceptable here because those names are functionally dependent on `student_id`, but some SQL engines would require them in the `GROUP BY`.</p><p>A robust version is:</p></div><pre class="lang-sql"><code>WITH course_counts AS (
+    SELECT s.student_id, s.first_name, s.last_name, COUNT(*) AS num_courses
+    FROM Students s
+    JOIN Student_Enrolment se
+      ON se.student_id = s.student_id
+    JOIN Student_Enrolment_Courses sec
+      ON sec.student_enrolment_id = se.student_enrolment_id
+    GROUP BY s.student_id, s.first_name, s.last_name
+)
+SELECT first_name, last_name
+FROM course_counts
+WHERE num_courses = (SELECT MAX(num_courses) FROM course_counts);
+</code></pre><div class="text"><p>If you want to count **distinct courses per student**, then change `COUNT(*)` to `COUNT(DISTINCT sec.course_id)`.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 4 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Yes — that’s the robust version.</p></div><pre class="lang-sql"><code>WITH course_counts AS (
+    SELECT s.student_id, s.first_name, s.last_name, COUNT(*) AS num_courses
+    FROM Students s
+    JOIN Student_Enrolment se
+      ON se.student_id = s.student_id
+    JOIN Student_Enrolment_Courses sec
+      ON sec.student_enrolment_id = se.student_enrolment_id
+    GROUP BY s.student_id, s.first_name, s.last_name
+)
+SELECT first_name, last_name
+FROM course_counts
+WHERE num_courses = (SELECT MAX(num_courses) FROM course_counts);
+</code></pre><div class="text"><p>This correctly returns the first and last name of the student(s) with the most course enrollments, including ties.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 5 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Correct.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 6 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><p class="empty">(empty message)</p></div>
+              </div>
+            </div>
+            </div>
+              
+            </section>
+            
+            <section class="problem-block">
+              <div class="problem-header">
+                <span class="problem-num">Problem 4</span>
+                <span class="problem-tag task-coding">CODING</span>
+                <span class="problem-id">HumanEval/43</span>
+                <span class="problem-leader">Leader: —</span>
+              </div>
+              <div class="problem-statement">
+                <div class="phase-label">Problem statement</div>
+                <div class="text"><p>You will now work on a different type of problem. Your full conversation history is preserved. Here is the next problem:</p><p>Problem (HumanEval/43):</p><p>Write a Python function:</p><p>from typing import List</p><p>def pairs_sum_to_zero(l: List[int]) -&gt; bool:<br>    &quot;&quot;&quot;Return True if there are two distinct elements in the list that sum to zero.<br>    &gt;&gt;&gt; pairs_sum_to_zero([1, 3, 5, 0])<br>    False<br>    &gt;&gt;&gt; pairs_sum_to_zero([2, 4, -5, 3, 5, 7])<br>    True<br>    &gt;&gt;&gt; pairs_sum_to_zero([1])<br>    False<br>    &quot;&quot;&quot;</p></div>
+              </div>
+              
+              
+              <div class="phase-label">Discussion</div><div class="chat-thread">
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 1 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><pre class="lang-python"><code>from typing import List
+
+def pairs_sum_to_zero(l: List[int]) -&gt; bool:
+    seen = set()
+    for x in l:
+        if -x in seen:
+            return True
+        seen.add(x)
+    return False
+</code></pre><div class="text"><p>This returns `True` when it finds two distinct elements `x` and `-x` in the list. It correctly handles `0` as well, since a single `0` is not enough; it would require two zeros to form a zero-sum pair.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 2 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Your solution is correct.</p><p>A couple of small points:</p><p>- It properly ensures the elements are **distinct** because a value only matches against previously seen elements.<br>- It handles `0` correctly: the first `0` is added to `seen`, and only a second `0` will trigger `-x in seen`.</p><p>So the final answer is:</p></div><pre class="lang-python"><code>from typing import List
+
+def pairs_sum_to_zero(l: List[int]) -&gt; bool:
+    seen = set()
+    for x in l:
+        if -x in seen:
+            return True
+        seen.add(x)
+    return False
+</code></pre></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 3 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Agreed — that is the correct and efficient solution.</p></div><pre class="lang-python"><code>from typing import List
+
+def pairs_sum_to_zero(l: List[int]) -&gt; bool:
+    seen = set()
+    for x in l:
+        if -x in seen:
+            return True
+        seen.add(x)
+    return False
+</code></pre></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 4 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Correct.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 5 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><p class="empty">(empty message)</p></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 6 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><p class="empty">(empty message)</p></div>
+              </div>
+            </div>
+            </div>
+              
+            </section>
+            
+            <section class="problem-block">
+              <div class="problem-header">
+                <span class="problem-num">Problem 5</span>
+                <span class="problem-tag task-coding">CODING</span>
+                <span class="problem-id">HumanEval/54</span>
+                <span class="problem-leader">Leader: —</span>
+              </div>
+              <div class="problem-statement">
+                <div class="phase-label">Problem statement</div>
+                <div class="text"><p>Problem (HumanEval/54):</p><p>Write a Python function:</p><p>def same_chars(s0: str, s1: str) -&gt; bool:<br>    &quot;&quot;&quot;Check if two strings contain the same characters with the same counts (order may differ).<br>    &gt;&gt;&gt; same_chars(&#x27;eabcdzzzz&#x27;, &#x27;dddzzzzzzzddeddabc&#x27;)<br>    True<br>    &gt;&gt;&gt; same_chars(&#x27;abcd&#x27;, &#x27;dddddddabc&#x27;)<br>    True<br>    &gt;&gt;&gt; same_chars(&#x27;eabcd&#x27;, &#x27;dddddddabc&#x27;)<br>    False<br>    &gt;&gt;&gt; same_chars(&#x27;eabcdzzzz&#x27;, &#x27;dddzzzzzzzddddabc&#x27;)<br>    False<br>    &quot;&quot;&quot;</p></div>
+              </div>
+              
+              
+              <div class="phase-label">Discussion</div><div class="chat-thread">
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 1 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><pre class="lang-python"><code>def same_chars(s0: str, s1: str) -&gt; bool:
+    return sorted(s0) == sorted(s1)
+</code></pre><div class="text"><p>This works because sorting both strings puts equal character multisets into the same order, so equality means the strings contain the same characters with the same counts.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 2 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Your solution is correct.</p><p>`sorted(s0) == sorted(s1)` does exactly compare the two strings as multisets of characters, including multiplicities, so it satisfies the requirement.</p><p>One minor note: this is `O(n log n)` due to sorting. If you wanted linear time, you could use `collections.Counter`, but for HumanEval this is perfectly acceptable.</p><p>Final answer:</p></div><pre class="lang-python"><code>def same_chars(s0: str, s1: str) -&gt; bool:
+    return sorted(s0) == sorted(s1)
+</code></pre></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 3 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Agreed — that is correct.</p></div><pre class="lang-python"><code>def same_chars(s0: str, s1: str) -&gt; bool:
+    return sorted(s0) == sorted(s1)
+</code></pre></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 4 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Correct.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 5 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><p class="empty">(empty message)</p></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 6 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><p class="empty">(empty message)</p></div>
+              </div>
+            </div>
+            </div>
+              
+            </section>
+            
+            <section class="problem-block">
+              <div class="problem-header">
+                <span class="problem-num">Problem 6</span>
+                <span class="problem-tag task-coding">CODING</span>
+                <span class="problem-id">HumanEval/65</span>
+                <span class="problem-leader">Leader: —</span>
+              </div>
+              <div class="problem-statement">
+                <div class="phase-label">Problem statement</div>
+                <div class="text"><p>Problem (HumanEval/65):</p><p>Write a Python function:</p><p>def circular_shift(x: str, shift: int) -&gt; str:<br>    &quot;&quot;&quot;Circularly shift the digits of integer string x to the right by shift positions.<br>    If shift &gt; number of digits, return the digits reversed.<br>    &gt;&gt;&gt; circular_shift(&#x27;12&#x27;, 1)<br>    &#x27;21&#x27;<br>    &gt;&gt;&gt; circular_shift(&#x27;12&#x27;, 2)<br>    &#x27;12&#x27;<br>    &gt;&gt;&gt; circular_shift(&#x27;12345&#x27;, 2)<br>    &#x27;45123&#x27;<br>    &quot;&quot;&quot;</p></div>
+              </div>
+              
+              
+              <div class="phase-label">Discussion</div><div class="chat-thread">
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 1 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><pre class="lang-python"><code>def circular_shift(x: str, shift: int) -&gt; str:
+    n = len(x)
+    if n == 0:
+        return x
+    if shift &gt; n:
+        return x[::-1]
+    shift %= n
+    return x[-shift:] + x[:-shift]
+</code></pre><div class="text"><p>This:<br>- returns the reversed string when `shift &gt; number of digits`<br>- otherwise performs a right circular shift by `shift` positions<br>- handles `shift == 0` and `shift == len(x)` correctly via modulo</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 2 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Your implementation is **not quite correct** for the examples and the wording.</p><p>### Problem<br>You wrote:</p></div><pre class="lang-python"><code>if shift &gt; n:
+    return x[::-1]
+</code></pre><div class="text"><p>But the prompt says:</p><p>&gt; If shift &gt; number of digits, return the digits reversed.</p><p>That part is fine. The issue is that your code uses `shift &gt; n`, but the examples imply the behavior should be based on **the original shift value**, not after modulo. That’s okay as written.</p><p>However, there’s a subtle bug for `shift == n`:</p><p>- Example: `circular_shift(&#x27;12&#x27;, 2)` should return `&#x27;12&#x27;`<br>- Your code does that because `shift %= n` becomes `0`, and then `x[-0:] + x[:-0]` becomes `&#x27;&#x27; + &#x27;&#x27;`? In Python, `x[:-0]` is `&#x27;&#x27;`, so this returns `&#x27;&#x27;`, not `&#x27;12&#x27;`.</p><p>### Correct fix<br>Handle `shift % n == 0` explicitly:</p></div><pre class="lang-python"><code>def circular_shift(x: str, shift: int) -&gt; str:
+    n = len(x)
+    if n == 0:
+        return x
+    if shift &gt; n:
+        return x[::-1]
+    shift %= n
+    if shift == 0:
+        return x
+    return x[-shift:] + x[:-shift]
+</code></pre><div class="text"><p>### Why this works<br>- `shift &gt; n`: reverse the string<br>- `shift == n` or any multiple of `n`: return the original string<br>- otherwise: do a right circular shift</p><p>If you want, I can also provide a more compact version.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 3 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>You&#x27;re right — `x[:-0]` is empty, so the original version fails when `shift % n == 0`.</p><p>The corrected version is:</p></div><pre class="lang-python"><code>def circular_shift(x: str, shift: int) -&gt; str:
+    n = len(x)
+    if n == 0:
+        return x
+    if shift &gt; n:
+        return x[::-1]
+    shift %= n
+    if shift == 0:
+        return x
+    return x[-shift:] + x[:-shift]
+</code></pre><div class="text"><p>This handles:<br>- `shift &gt; n` by reversing<br>- `shift == n` by returning the original string<br>- ordinary right circular shifts correctly</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 4 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Yes — that corrected version is good.</p><p>A small note: the prompt says “shift the digits of integer string x,” so this implementation is appropriate for any string input, though it assumes the string content is treated as opaque characters.</p><p>Final answer:</p></div><pre class="lang-python"><code>def circular_shift(x: str, shift: int) -&gt; str:
+    n = len(x)
+    if n == 0:
+        return x
+    if shift &gt; n:
+        return x[::-1]
+    shift %= n
+    if shift == 0:
+        return x
+    return x[-shift:] + x[:-shift]
+</code></pre></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 5 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Agreed — that is the correct final answer.</p></div><pre class="lang-python"><code>def circular_shift(x: str, shift: int) -&gt; str:
+    n = len(x)
+    if n == 0:
+        return x
+    if shift &gt; n:
+        return x[::-1]
+    shift %= n
+    if shift == 0:
+        return x
+    return x[-shift:] + x[:-shift]
+</code></pre></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 6 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Correct.</p></div></div>
+              </div>
+            </div>
+            </div>
+              
+            </section>
+            
+  </div>
+</body>
+</html>

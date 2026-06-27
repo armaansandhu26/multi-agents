@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Run 20260627T120000Z — Condition C</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --panel: #171a22;
+      --border: #2a3040;
+      --text: #e8eaef;
+      --muted: #9aa3b2;
+      --code-bg: #0b0d12;
+      --coding: #6ea8fe;
+      --sql: #63e6be;
+      --system: #adb5bd;
+      --pass: #51cf66;
+      --fail: #ff6b6b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .page {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 24px 16px 64px;
+    }
+    header {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    header h1 { margin: 0 0 8px; font-size: 1.4rem; }
+    header .meta { color: var(--muted); font-size: 0.9rem; }
+    .scores { display: flex; gap: 16px; margin-top: 12px; font-weight: 600; }
+    .problem-block {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .problem-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      padding: 14px 18px;
+      background: #1e2433;
+      border-bottom: 1px solid var(--border);
+    }
+    .problem-num { font-weight: 700; }
+    .problem-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      letter-spacing: 0.04em;
+    }
+    .task-coding { background: #1c3a5f; color: var(--coding); }
+    .task-sql { background: #1a4038; color: var(--sql); }
+    .problem-id { color: var(--muted); flex: 1; }
+    .problem-leader { font-size: 0.85rem; color: var(--muted); }
+    .phase-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .problem-statement, .pitch-row, .selection-banner, .chat-thread, .reward-banner {
+      padding: 16px 18px;
+    }
+    .problem-statement { border-bottom: 1px solid var(--border); }
+    .pitch-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    @media (max-width: 700px) { .pitch-row { grid-template-columns: 1fr; } }
+    .pitch-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .pitch-card.code { border-color: #31527a; }
+    .pitch-card.sql { border-color: #2a5c4f; }
+    .pitch-header {
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: #1a1f2b;
+    }
+    .pitch-card.code .pitch-header { color: var(--coding); }
+    .pitch-card.sql .pitch-header { color: var(--sql); }
+    .pitch-body { padding: 12px; font-size: 0.92rem; }
+    .selection-banner {
+      background: #1a1f2b;
+      border-bottom: 1px solid var(--border);
+    }
+    .selection-body { font-size: 0.95rem; }
+    .chat-thread { display: flex; flex-direction: column; gap: 12px; }
+    .bubble-row { display: flex; }
+    .bubble-row.code { justify-content: flex-start; }
+    .bubble-row.sql { justify-content: flex-end; }
+    .bubble {
+      max-width: 88%;
+      border-radius: 14px;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+    }
+    .bubble.code { background: #152238; border-color: #2d4a73; }
+    .bubble.sql { background: #142821; border-color: #2a5c4f; }
+    .bubble-meta {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .bubble-content { font-size: 0.93rem; }
+    .reward-banner { border-top: 1px solid var(--border); }
+    .reward-pass { background: #142318; }
+    .reward-fail { background: #2a1518; }
+    .reward-pass .phase-label { color: var(--pass); }
+    .reward-fail .phase-label { color: var(--fail); }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      margin: 8px 0;
+    }
+    .text p { margin: 0 0 8px; }
+    .empty { color: var(--muted); font-style: italic; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1>Condition C · Run 20260627T120000Z</h1>
+      <div class="meta">
+        Model: gpt-5.4-mini ·
+        Mode: pitch ·
+        Order: coding → sql
+      </div>
+      <div class='scores'><span>C: 2.0</span><span>S: 1.0</span></div>
+    </header>
+    
+            <section class="problem-block">
+              <div class="problem-header">
+                <span class="problem-num">Problem 1</span>
+                <span class="problem-tag task-coding">CODING</span>
+                <span class="problem-id">HumanEval/101</span>
+                <span class="problem-leader">Leader: Code Expert (C)</span>
+              </div>
+              <div class="problem-statement">
+                <div class="phase-label">Problem statement</div>
+                <div class="text"><p>Problem (HumanEval/101):</p><p>Write a Python function:</p><p>def words_string(s):<br>    &quot;&quot;&quot;<br>    You will be given a string of words separated by commas or spaces. Your task is<br>    to split the string into words and return an array of the words.<br>    <br>    For example:<br>    words_string(&quot;Hi, my name is John&quot;) == [&quot;Hi&quot;, &quot;my&quot;, &quot;name&quot;, &quot;is&quot;, &quot;John&quot;]<br>    words_string(&quot;One, two, three, four, five, six&quot;) == [&quot;One&quot;, &quot;two&quot;, &quot;three&quot;, &quot;four&quot;, &quot;five&quot;, &quot;six&quot;]<br>    &quot;&quot;&quot;</p></div>
+              </div>
+              <div class="phase-label">Pitches</div><div class="pitch-row">
+            <div class="pitch-card code">
+              <div class="pitch-header">Code Expert (C)</div>
+              <div class="pitch-body"><div class="text"><p>BID: LEAD<br>CONFIDENCE: 99<br>CLAIM: I have strong Python string-handling and edge-case parsing experience.<br>APPROACH: Split on commas and whitespace, then filter out any empty tokens. The simplest robust approach is to use a regular expression like `re.split(r&quot;[,\s]+&quot;, s.strip())`, which handles mixed commas/spaces and avoids empty strings from repeated separators. Main risk is leading/trailing whitespace or multiple delimiters, which `strip()` plus regex splitting handles cleanly. I should lead because this is a straightforward parsing task and I can provide a correct, concise solution.</p></div></div>
+            </div>
+            
+            <div class="pitch-card sql">
+              <div class="pitch-header">SQL Expert (S)</div>
+              <div class="pitch-body"><div class="text"><p>BID: LEAD<br>CONFIDENCE: 96<br>CLAIM: I have strong Python string-processing and edge-case handling experience.<br>APPROACH: Use a simple split on commas and whitespace, but normalize separators first so both `&quot;Hi, my name&quot;` and `&quot;Hi, my name&quot;`-style inputs work cleanly. The safest approach is `re.split(r&quot;[,\s]+&quot;, s.strip())`, then filter out any empty strings. This handles multiple spaces, commas, mixed separators, and leading/trailing whitespace. Risk is low: the task is straightforward, but a naive `s.split()` would fail on commas, and `s.split(&quot;,&quot;)` would leave spaces attached. I should lead because the solution is concise, robust, and easy to verify against the examples.</p></div></div>
+            </div>
+            </div>
+              
+    <div class="selection-banner">
+      <div class="phase-label">Leader selected</div>
+      <div class="selection-body"><div class="text"><p>Moderator selection for HumanEval/101:<br>LEADER: agent_alpha<br>agent_alpha gives the more direct, well-scoped rationale with slightly higher confidence for a straightforward parsing task, and both pitches are strong but alpha is marginally better aligned.</p><p>agent_alpha will open the discussion. agent_beta follows.<br>Leader earns +3.0 on team success but -1.0 on team failure; follower earns +1.0 on team success and 0 on team failure.</p></div></div>
+    </div>
+    
+              <div class="phase-label">Discussion</div><div class="chat-thread">
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 1 · Code Expert (C) (leader)
+                </div>
+                <div class="bubble-content"><div class="text"><p>A robust implementation is:</p></div><pre class="lang-python"><code>import re
+
+def words_string(s):
+    return [w for w in re.split(r&quot;[,\s]+&quot;, s.strip()) if w]
+</code></pre><div class="text"><p>This splits on commas or any whitespace, and filters out any empty tokens.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 2 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>A concise correct implementation is:</p></div><pre class="lang-python"><code>import re
+
+def words_string(s):
+    return [w for w in re.split(r&quot;[,\s]+&quot;, s.strip()) if w]
+</code></pre><div class="text"><p>This splits on commas or whitespace and removes any empty tokens.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 3 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Yes — that implementation is correct and matches the examples.</p><p>If you want an even shorter equivalent, this also works:</p></div><pre class="lang-python"><code>import re
+
+def words_string(s):
+    return re.split(r&quot;[,\s]+&quot;, s.strip())
+</code></pre><div class="text"><p>Because the input is described as words separated by commas or spaces, `strip()` plus the regex split is enough in practice.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 4 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Yes — that shorter version is also correct for the stated problem:</p></div><pre class="lang-python"><code>import re
+
+def words_string(s):
+    return re.split(r&quot;[,\s]+&quot;, s.strip())
+</code></pre><div class="text"><p>Since the separators are commas and/or whitespace, `re.split(r&quot;[,\s]+&quot;, ...)` handles mixed delimiters cleanly, and `strip()` removes leading/trailing separators so you don’t get empty tokens at the ends.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 5 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Correct. For this problem, that shorter version is sufficient:</p></div><pre class="lang-python"><code>import re
+
+def words_string(s):
+    return re.split(r&quot;[,\s]+&quot;, s.strip())
+</code></pre><div class="text"><p>It cleanly handles commas, spaces, mixed separators, and leading/trailing whitespace.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 6 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><pre class="lang-python"><code>import re
+
+def words_string(s):
+    return re.split(r&quot;[,\s]+&quot;, s.strip())
+</code></pre></div>
+              </div>
+            </div>
+            </div>
+              
+    <div class="selection-banner">
+      <div class="phase-label">Final solution (submitted by Code Expert (C))</div>
+      <div class="selection-body"><pre class="lang-python"><code>import re
+
+def words_string(s):
+    return re.split(r&quot;[,\s]+&quot;, s.strip())
+</code></pre></div>
+    </div>
+    
+              
+    <div class="reward-banner reward-fail">
+      <div class="phase-label">Outcome</div>
+      <div class="reward-body"><div class="text"><p>Problem HumanEval/101 — FAILURE<br>Leader: agent_alpha (-1.0)<br>Follower: agent_beta (+0.0)<br>Cumulative scores — agent_alpha: -1.0, agent_beta: 0.0</p><p>Reward rules reminder: success → leader +3.0, follower +1.0; failure → leader -1.0, follower 0.0.</p></div></div>
+    </div>
+    
+            </section>
+            
+            <section class="problem-block">
+              <div class="problem-header">
+                <span class="problem-num">Problem 2</span>
+                <span class="problem-tag task-sql">SQL</span>
+                <span class="problem-id">Spider/dev_0196</span>
+                <span class="problem-leader">Leader: Code Expert (C)</span>
+              </div>
+              <div class="problem-statement">
+                <div class="phase-label">Problem statement</div>
+                <div class="text"><p>You will now work on a different type of problem. Your full conversation history is preserved. Here is the next problem:</p><p>Problem (Spider/dev_0196):</p><p>Database schema (SQLite):</p><p>(schema file missing for flight_2)</p><p>Question: Return the number of airlines in the USA.</p><p>Write a single SQLite SELECT statement that answers the question.</p></div>
+              </div>
+              <div class="phase-label">Pitches</div><div class="pitch-row">
+            <div class="pitch-card code">
+              <div class="pitch-header">Code Expert (C)</div>
+              <div class="pitch-body"><div class="text"><p>BID: DEFER<br>CONFIDENCE: 72<br>CLAIM: I’m good at SQL, but the missing schema makes this safer to defer.<br>APPROACH: The right query likely counts rows in an airlines table filtered to USA, e.g. `SELECT COUNT(*) FROM airlines WHERE country = &#x27;USA&#x27;;`, but without the schema I can’t be sure of the table or column names. Risks: the table may be named differently, or USA may be stored in a state/country field with a different label. I should defer unless the other agent has schema-specific evidence.</p></div></div>
+            </div>
+            
+            <div class="pitch-card sql">
+              <div class="pitch-header">SQL Expert (S)</div>
+              <div class="pitch-body"><div class="text"><p>BID: LEAD<br>CONFIDENCE: 92<br>CLAIM: I have strong SQLite schema-inference and aggregation experience.<br>APPROACH: I would inspect the likely airline table and count distinct airline records filtered to USA, using a single SELECT with COUNT(*) or COUNT(DISTINCT ...) depending on whether the schema stores one row per airline. Main risk is unknown table/column names because the schema file is missing, so I’d choose the most standard airline table pattern from the Spider dataset and ensure the query is valid SQLite.</p></div></div>
+            </div>
+            </div>
+              
+    <div class="selection-banner">
+      <div class="phase-label">Leader selected</div>
+      <div class="selection-body"><div class="text"><p>Moderator selection for Spider/dev_0196:<br>LEADER: agent_alpha<br>agent_alpha shows better caution and fit for the missing-schema uncertainty, while agent_beta’s high-confidence lead claim is less grounded despite similar speculative approach.</p><p>agent_alpha will open the discussion. agent_beta follows.<br>Leader earns +3.0 on team success but -1.0 on team failure; follower earns +1.0 on team success and 0 on team failure.</p></div></div>
+    </div>
+    
+              <div class="phase-label">Discussion</div><div class="chat-thread">
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 1 · Code Expert (C) (leader)
+                </div>
+                <div class="bubble-content"><div class="text"><p>SELECT COUNT(*) FROM airlines WHERE country = &#x27;USA&#x27;;</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 2 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>SELECT COUNT(*) FROM airlines WHERE country = &#x27;USA&#x27;;</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 3 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>SELECT COUNT(*) FROM airlines WHERE country = &#x27;USA&#x27;;</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 4 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>SELECT COUNT(*) FROM airlines WHERE country = &#x27;USA&#x27;;</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 5 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>SELECT COUNT(*) FROM airlines WHERE country = &#x27;USA&#x27;;</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 6 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>SELECT COUNT(*) FROM airlines WHERE country = &#x27;USA&#x27;;</p></div></div>
+              </div>
+            </div>
+            </div>
+              
+    <div class="selection-banner">
+      <div class="phase-label">Final solution (submitted by Code Expert (C))</div>
+      <div class="selection-body"><pre class="lang-sql"><code>SELECT COUNT(*) FROM airlines WHERE country = &#x27;USA&#x27;;
+</code></pre></div>
+    </div>
+    
+              
+    <div class="reward-banner reward-pass">
+      <div class="phase-label">Outcome</div>
+      <div class="reward-body"><div class="text"><p>Problem Spider/dev_0196 — SUCCESS<br>Leader: agent_alpha (+3.0)<br>Follower: agent_beta (+1.0)<br>Cumulative scores — agent_alpha: 2.0, agent_beta: 1.0</p><p>Reward rules reminder: success → leader +3.0, follower +1.0; failure → leader -1.0, follower 0.0.</p></div></div>
+    </div>
+    
+            </section>
+            
+  </div>
+</body>
+</html>

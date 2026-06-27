@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Run 20260601T184908Z — Condition A</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --panel: #171a22;
+      --border: #2a3040;
+      --text: #e8eaef;
+      --muted: #9aa3b2;
+      --code-bg: #0b0d12;
+      --coding: #6ea8fe;
+      --sql: #63e6be;
+      --system: #adb5bd;
+      --pass: #51cf66;
+      --fail: #ff6b6b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .page {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 24px 16px 64px;
+    }
+    header {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    header h1 { margin: 0 0 8px; font-size: 1.4rem; }
+    header .meta { color: var(--muted); font-size: 0.9rem; }
+    .scores { display: flex; gap: 16px; margin-top: 12px; font-weight: 600; }
+    .problem-block {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .problem-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      padding: 14px 18px;
+      background: #1e2433;
+      border-bottom: 1px solid var(--border);
+    }
+    .problem-num { font-weight: 700; }
+    .problem-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      letter-spacing: 0.04em;
+    }
+    .task-coding { background: #1c3a5f; color: var(--coding); }
+    .task-sql { background: #1a4038; color: var(--sql); }
+    .problem-id { color: var(--muted); flex: 1; }
+    .problem-leader { font-size: 0.85rem; color: var(--muted); }
+    .phase-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .problem-statement, .pitch-row, .selection-banner, .chat-thread, .reward-banner {
+      padding: 16px 18px;
+    }
+    .problem-statement { border-bottom: 1px solid var(--border); }
+    .pitch-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    @media (max-width: 700px) { .pitch-row { grid-template-columns: 1fr; } }
+    .pitch-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .pitch-card.code { border-color: #31527a; }
+    .pitch-card.sql { border-color: #2a5c4f; }
+    .pitch-header {
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: #1a1f2b;
+    }
+    .pitch-card.code .pitch-header { color: var(--coding); }
+    .pitch-card.sql .pitch-header { color: var(--sql); }
+    .pitch-body { padding: 12px; font-size: 0.92rem; }
+    .selection-banner {
+      background: #1a1f2b;
+      border-bottom: 1px solid var(--border);
+    }
+    .selection-body { font-size: 0.95rem; }
+    .chat-thread { display: flex; flex-direction: column; gap: 12px; }
+    .bubble-row { display: flex; }
+    .bubble-row.code { justify-content: flex-start; }
+    .bubble-row.sql { justify-content: flex-end; }
+    .bubble {
+      max-width: 88%;
+      border-radius: 14px;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+    }
+    .bubble.code { background: #152238; border-color: #2d4a73; }
+    .bubble.sql { background: #142821; border-color: #2a5c4f; }
+    .bubble-meta {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .bubble-content { font-size: 0.93rem; }
+    .reward-banner { border-top: 1px solid var(--border); }
+    .reward-pass { background: #142318; }
+    .reward-fail { background: #2a1518; }
+    .reward-pass .phase-label { color: var(--pass); }
+    .reward-fail .phase-label { color: var(--fail); }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      margin: 8px 0;
+    }
+    .text p { margin: 0 0 8px; }
+    .empty { color: var(--muted); font-style: italic; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1>Condition A · Run 20260601T184908Z</h1>
+      <div class="meta">
+        Model: gpt-5.4-mini ·
+        Mode: pitch ·
+        Order: coding → sql
+      </div>
+      <div class='scores'><span>C: 7.5</span><span>S: 7.5</span></div>
+    </header>
+    
+            <section class="problem-block">
+              <div class="problem-header">
+                <span class="problem-num">Problem 1</span>
+                <span class="problem-tag task-coding">CODING</span>
+                <span class="problem-id">HumanEval/43</span>
+                <span class="problem-leader">Leader: Code Expert (C)</span>
+              </div>
+              <div class="problem-statement">
+                <div class="phase-label">Problem statement</div>
+                <div class="text"><p>Problem (HumanEval/43):</p><p>Write a Python function:</p><p>from typing import List</p><p>def pairs_sum_to_zero(l: List[int]) -&gt; bool:<br>    &quot;&quot;&quot;Return True if there are two distinct elements in the list that sum to zero.<br>    &gt;&gt;&gt; pairs_sum_to_zero([1, 3, 5, 0])<br>    False<br>    &gt;&gt;&gt; pairs_sum_to_zero([2, 4, -5, 3, 5, 7])<br>    True<br>    &gt;&gt;&gt; pairs_sum_to_zero([1])<br>    False<br>    &quot;&quot;&quot;</p></div>
+              </div>
+              <div class="phase-label">Pitches</div><div class="pitch-row">
+            <div class="pitch-card code">
+              <div class="pitch-header">Code Expert (C)</div>
+              <div class="pitch-body"><div class="text"><p>PITCH<br>I should lead this one because it’s a straightforward Python algorithm problem in my primary domain, and I can provide a correct, efficient solution with clear edge-case handling. My approach is to scan the list once while tracking seen values in a set; for each number `x`, check whether `-x` has already appeared, which gives O(n) time and O(n) space. The main risk is handling `0` and duplicate values correctly, but the “two distinct elements” requirement is naturally satisfied by only returning True when a matching complement has been seen earlier.</p></div></div>
+            </div>
+            
+            <div class="pitch-card sql">
+              <div class="pitch-header">SQL Expert (S)</div>
+              <div class="pitch-body"><div class="text"><p>PITCH<br>I should lead this one because it’s a simple list-membership problem, and I can provide a correct, efficient one-pass solution with clear edge-case handling. My approach would be to scan the list once while tracking seen values in a set; for each number `x`, check whether `-x` has already appeared, while also ensuring the two elements are distinct. The main risk is mishandling `0` or duplicate values like `[0, 0]`, so I’d explicitly reason about those cases in the implementation and tests.</p></div></div>
+            </div>
+            </div>
+              
+    <div class="selection-banner">
+      <div class="phase-label">Leader selected</div>
+      <div class="selection-body"><div class="text"><p>Moderator selection for HumanEval/43:<br>LEADER: code_expert<br>code_expert has stronger domain fit for this Python algorithm task and gives a precise, efficient plan with appropriate edge-case caution.</p><p>code_expert will open the discussion. sql_expert follows.<br>Leader earns +0.5 extra on team success but -0.5 on team failure.</p></div></div>
+    </div>
+    
+              <div class="phase-label">Discussion</div><div class="chat-thread">
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 1 · Code Expert (C) (leader)
+                </div>
+                <div class="bubble-content"><div class="text"><p>A correct one-pass solution is:</p></div><pre class="lang-python"><code>from typing import List
+
+def pairs_sum_to_zero(l: List[int]) -&gt; bool:
+    seen = set()
+    for x in l:
+        if -x in seen:
+            return True
+        seen.add(x)
+    return False
+</code></pre><div class="text"><p>Why this works:<br>- We scan left to right.<br>- For each `x`, we check whether its additive inverse `-x` was seen earlier.<br>- If yes, we have two distinct elements whose sum is zero.<br>- Using `seen` ensures O(n) time and O(n) space.</p><p>Edge cases:<br>- `[1]` → `False`<br>- `[1, 3, 5, 0]` → `False` because a single `0` is not a pair<br>- `[0, 0]` → `True` because the second `0` finds the first `0` in `seen`<br>- `[-2, 7, 2]` → `True` because `2` matches earlier `-2`</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 2 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Your solution is correct.</p><p>A clean implementation is:</p></div><pre class="lang-python"><code>from typing import List
+
+def pairs_sum_to_zero(l: List[int]) -&gt; bool:
+    seen = set()
+    for x in l:
+        if -x in seen:
+            return True
+        seen.add(x)
+    return False
+</code></pre><div class="text"><p>Why it works:<br>- We iterate once through the list.<br>- For each value `x`, we check whether `-x` has already appeared.<br>- If so, we’ve found two distinct elements whose sum is zero.<br>- The `seen` set gives O(1) average membership checks, so the whole algorithm is O(n) time and O(n) space.</p><p>Important edge case:<br>- `[0, 0]` correctly returns `True`, since the second `0` matches the first.<br>- A single `[0]` returns `False`, since there is no distinct pair.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 3 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Exactly — that implementation is correct and handles the `0` case properly.</p><p>If you want, I can also show a slightly more explicit variant that makes the “distinct elements” condition obvious, but the current one is already optimal and idiomatic.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 4 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Agreed. The one-pass set-based solution is both correct and idiomatic.</p><p>If you want a slightly more explicit version, this makes the distinctness a bit easier to see because the check happens before inserting the current element:</p></div><pre class="lang-python"><code>from typing import List
+
+def pairs_sum_to_zero(l: List[int]) -&gt; bool:
+    seen = set()
+    for x in l:
+        if -x in seen:
+            return True
+        seen.add(x)
+    return False
+</code></pre><div class="text"><p>This is the same logic, just the standard form.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 5 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Yes — that’s the standard, clean implementation.</p><p>One small note: your “more explicit version” is actually identical to the original, which is fine because the original already makes the distinctness requirement clear:<br>- we only match against values seen in earlier positions,<br>- so we never pair an element with itself unless it appears twice.</p><p>So the final answer is:</p></div><pre class="lang-python"><code>from typing import List
+
+def pairs_sum_to_zero(l: List[int]) -&gt; bool:
+    seen = set()
+    for x in l:
+        if -x in seen:
+            return True
+        seen.add(x)
+    return False
+</code></pre></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 6 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Yes — that’s correct.</p><p>The final solution is:</p></div><pre class="lang-python"><code>from typing import List
+
+def pairs_sum_to_zero(l: List[int]) -&gt; bool:
+    seen = set()
+    for x in l:
+        if -x in seen:
+            return True
+        seen.add(x)
+    return False
+</code></pre><div class="text"><p>This returns `True` exactly when there are two distinct elements whose sum is zero.</p></div></div>
+              </div>
+            </div>
+            </div>
+              
+    <div class="reward-banner reward-pass">
+      <div class="phase-label">Outcome</div>
+      <div class="reward-body"><div class="text"><p>Problem HumanEval/43 — SUCCESS<br>Leader: code_expert (+1.5)<br>Follower: sql_expert (+1.0)<br>Cumulative scores — code_expert: 1.5, sql_expert: 1.0</p><p>Reward rules reminder: success → both +1.0, leader +0.5 extra; failure → leader -0.5, follower 0.0.</p></div></div>
+    </div>
+    
+            </section>
+            
+            <section class="problem-block">
+              <div class="problem-header">
+                <span class="problem-num">Problem 2</span>
+                <span class="problem-tag task-coding">CODING</span>
+                <span class="problem-id">HumanEval/54</span>
+                <span class="problem-leader">Leader: Code Expert (C)</span>
+              </div>
+              <div class="problem-statement">
+                <div class="phase-label">Problem statement</div>
+                <div class="text"><p>Problem (HumanEval/54):</p><p>Write a Python function:</p><p>def same_chars(s0: str, s1: str) -&gt; bool:<br>    &quot;&quot;&quot;Check if two strings contain the same characters with the same counts (order may differ).<br>    &gt;&gt;&gt; same_chars(&#x27;eabcdzzzz&#x27;, &#x27;dddzzzzzzzddeddabc&#x27;)<br>    True<br>    &gt;&gt;&gt; same_chars(&#x27;abcd&#x27;, &#x27;dddddddabc&#x27;)<br>    True<br>    &gt;&gt;&gt; same_chars(&#x27;eabcd&#x27;, &#x27;dddddddabc&#x27;)<br>    False<br>    &gt;&gt;&gt; same_chars(&#x27;eabcdzzzz&#x27;, &#x27;dddzzzzzzzddddabc&#x27;)<br>    False<br>    &quot;&quot;&quot;</p></div>
+              </div>
+              <div class="phase-label">Pitches</div><div class="pitch-row">
+            <div class="pitch-card code">
+              <div class="pitch-header">Code Expert (C)</div>
+              <div class="pitch-body"><div class="text"><p>PITCH  <br>I should lead this one because it’s a classic Python string/multiset comparison problem in my primary domain, and I can give a simple, correct solution with strong edge-case coverage. My approach is to compare character counts using `collections.Counter`, which directly checks whether both strings contain the same characters with the same multiplicities, regardless of order. The main risk is forgetting that equal sets of characters are not enough; counts must match exactly, including repeated letters. `Counter` avoids that pitfall and gives an O(n) solution.</p></div></div>
+            </div>
+            
+            <div class="pitch-card sql">
+              <div class="pitch-header">SQL Expert (S)</div>
+              <div class="pitch-body"><div class="text"><p>PITCH<br>I should not lead this one; it’s a straightforward string-frequency comparison problem, and while I can solve it, it’s not my strongest domain compared with SQL/schema tasks. The correct approach is to compare character counts for both strings, e.g. with `collections.Counter`, and return whether the two counters are equal. The main risk is overlooking multiplicity: matching sets of characters is not enough, because the counts must also match exactly.</p></div></div>
+            </div>
+            </div>
+              
+    <div class="selection-banner">
+      <div class="phase-label">Leader selected</div>
+      <div class="selection-body"><div class="text"><p>Moderator selection for HumanEval/54:<br>LEADER: code_expert<br>code_expert has the stronger domain fit and a confident, correct multiset-counting approach, while sql_expert appropriately defers on this off-domain Python task.</p><p>code_expert will open the discussion. sql_expert follows.<br>Leader earns +0.5 extra on team success but -0.5 on team failure.</p></div></div>
+    </div>
+    
+              <div class="phase-label">Discussion</div><div class="chat-thread">
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 1 · Code Expert (C) (leader)
+                </div>
+                <div class="bubble-content"><div class="text"><p>A correct solution is to compare character frequencies with `Counter`:</p></div><pre class="lang-python"><code>from collections import Counter
+
+def same_chars(s0: str, s1: str) -&gt; bool:
+    return Counter(s0) == Counter(s1)
+</code></pre><div class="text"><p>Why this works:<br>- `Counter` records how many times each character appears.<br>- Two strings have the same characters with the same counts exactly when their counters are equal.<br>- Order does not matter.</p><p>Examples:<br>- `&#x27;abcd&#x27;` and `&#x27;dddddddabc&#x27;` → `False`? Wait, let&#x27;s check carefully:<br>  - `s0 = &#x27;abcd&#x27;` has counts `a:1, b:1, c:1, d:1`<br>  - `s1 = &#x27;dddddddabc&#x27;` has counts `d:7, a:1, b:1, c:1`<br>  - These are **not** equal, so the result is `False`.</p><p>That means the example in the prompt:</p></div><pre class="lang-python"><code>same_chars(&#x27;abcd&#x27;, &#x27;dddddddabc&#x27;)
+</code></pre><div class="text"><p>should actually be `False` if we interpret the function literally as “same characters with the same counts.”</p><p>So the intended task is likely to check whether the two strings are anagrams including multiplicity, and the `Counter` solution is the right implementation for that specification.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 2 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>The `Counter` approach is the right one:</p></div><pre class="lang-python"><code>from collections import Counter
+
+def same_chars(s0: str, s1: str) -&gt; bool:
+    return Counter(s0) == Counter(s1)
+</code></pre><div class="text"><p>One important note: the prompt’s example</p></div><pre class="lang-python"><code>same_chars(&#x27;abcd&#x27;, &#x27;dddddddabc&#x27;)
+</code></pre><div class="text"><p>is inconsistent with the stated behavior “same characters with the same counts,” because those strings do **not** have the same multiplicities. Under the literal specification, that should be `False`.</p><p>So:<br>- If the intended meaning is “same multiset of characters,” `Counter` is correct.<br>- If the examples are authoritative, then the problem statement is likely misstated.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 3 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>You’re right to flag that inconsistency.</p><p>For the stated requirement — same characters with the same counts — the correct implementation is:</p></div><pre class="lang-python"><code>from collections import Counter
+
+def same_chars(s0: str, s1: str) -&gt; bool:
+    return Counter(s0) == Counter(s1)
+</code></pre><div class="text"><p>This checks exact character multiplicities, regardless of order.</p><p>And yes, the example:</p></div><pre class="lang-python"><code>same_chars(&#x27;abcd&#x27;, &#x27;dddddddabc&#x27;)
+</code></pre><div class="text"><p>does not match the literal specification, because the counts differ. If the examples are intended to be authoritative, then the prompt likely has a typo or mistake.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 4 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Agreed. The correct implementation for the stated specification is:</p></div><pre class="lang-python"><code>from collections import Counter
+
+def same_chars(s0: str, s1: str) -&gt; bool:
+    return Counter(s0) == Counter(s1)
+</code></pre><div class="text"><p>This compares character multiplicities exactly, ignoring order.</p><p>Note: the example `same_chars(&#x27;abcd&#x27;, &#x27;dddddddabc&#x27;)` conflicts with that specification, so the prompt likely contains a typo.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 5 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><pre class="lang-python"><code>from collections import Counter
+
+def same_chars(s0: str, s1: str) -&gt; bool:
+    return Counter(s0) == Counter(s1)
+</code></pre></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 6 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Yes — that is the correct solution for the stated requirement:</p></div><pre class="lang-python"><code>from collections import Counter
+
+def same_chars(s0: str, s1: str) -&gt; bool:
+    return Counter(s0) == Counter(s1)
+</code></pre><div class="text"><p>It returns `True` exactly when both strings have identical character counts.</p></div></div>
+              </div>
+            </div>
+            </div>
+              
+    <div class="reward-banner reward-pass">
+      <div class="phase-label">Outcome</div>
+      <div class="reward-body"><div class="text"><p>Problem HumanEval/54 — SUCCESS<br>Leader: code_expert (+1.5)<br>Follower: sql_expert (+1.0)<br>Cumulative scores — code_expert: 3.0, sql_expert: 2.0</p><p>Reward rules reminder: success → both +1.0, leader +0.5 extra; failure → leader -0.5, follower 0.0.</p></div></div>
+    </div>
+    
+            </section>
+            
+            <section class="problem-block">
+              <div class="problem-header">
+                <span class="problem-num">Problem 3</span>
+                <span class="problem-tag task-coding">CODING</span>
+                <span class="problem-id">HumanEval/65</span>
+                <span class="problem-leader">Leader: Code Expert (C)</span>
+              </div>
+              <div class="problem-statement">
+                <div class="phase-label">Problem statement</div>
+                <div class="text"><p>Problem (HumanEval/65):</p><p>Write a Python function:</p><p>def circular_shift(x: str, shift: int) -&gt; str:<br>    &quot;&quot;&quot;Circularly shift the digits of integer string x to the right by shift positions.<br>    If shift &gt; number of digits, return the digits reversed.<br>    &gt;&gt;&gt; circular_shift(&#x27;12&#x27;, 1)<br>    &#x27;21&#x27;<br>    &gt;&gt;&gt; circular_shift(&#x27;12&#x27;, 2)<br>    &#x27;12&#x27;<br>    &gt;&gt;&gt; circular_shift(&#x27;12345&#x27;, 2)<br>    &#x27;45123&#x27;<br>    &quot;&quot;&quot;</p></div>
+              </div>
+              <div class="phase-label">Pitches</div><div class="pitch-row">
+            <div class="pitch-card code">
+              <div class="pitch-header">Code Expert (C)</div>
+              <div class="pitch-body"><div class="text"><p>PITCH  <br>I should lead this one because it’s a small Python string-manipulation problem in my primary domain, and I can provide a correct implementation with careful handling of the edge case in the prompt. My approach is to normalize the shift by the string length, then perform a right rotation using slicing. The key risk is the special rule “If shift &gt; number of digits, return the digits reversed,” which is nonstandard and must override the usual circular shift behavior. I’ll make sure to handle empty strings and the `shift == len(x)` case as well.</p></div></div>
+            </div>
+            
+            <div class="pitch-card sql">
+              <div class="pitch-header">SQL Expert (S)</div>
+              <div class="pitch-body"><div class="text"><p>PITCH  <br>I should lead this one because it’s a small string-manipulation problem with a precise edge-case rule, and I can implement it cleanly and correctly. My approach is to handle the special case first: if `shift` is greater than the string length, return the reversed string; otherwise perform a standard right rotation using slicing with `shift % len(x)`. The main risk is interpreting the “if shift &gt; number of digits” rule too literally and forgetting that the examples imply normal circular behavior when `shift &lt;= len(x)`, including `shift == len(x)` returning the original string.</p></div></div>
+            </div>
+            </div>
+              
+    <div class="selection-banner">
+      <div class="phase-label">Leader selected</div>
+      <div class="selection-body"><div class="text"><p>Moderator selection for HumanEval/65:<br>LEADER: code_expert<br>code_expert has the stronger domain fit and a more cautious, accurate read of the edge cases, while sql_expert’s pitch is good but less aligned with the problem’s primary language domain.</p><p>code_expert will open the discussion. sql_expert follows.<br>Leader earns +0.5 extra on team success but -0.5 on team failure.</p></div></div>
+    </div>
+    
+              <div class="phase-label">Discussion</div><div class="chat-thread">
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 1 · Code Expert (C) (leader)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Here’s a correct implementation that follows the examples and the special rule:</p></div><pre class="lang-python"><code>def circular_shift(x: str, shift: int) -&gt; str:
+    if not x:
+        return x
+    if shift &gt; len(x):
+        return x[::-1]
+    shift %= len(x)
+    return x[-shift:] + x[:-shift]
+</code></pre><div class="text"><p>Notes:<br>- If `shift &gt; len(x)`, return the reversed string.<br>- Otherwise, do a normal right circular shift.<br>- `shift == len(x)` gives the original string, since `shift %= len(x)` becomes `0`.</p><p>Examples:<br>- `circular_shift(&#x27;12&#x27;, 1) -&gt; &#x27;21&#x27;`<br>- `circular_shift(&#x27;12&#x27;, 2) -&gt; &#x27;12&#x27;`<br>- `circular_shift(&#x27;12345&#x27;, 2) -&gt; &#x27;45123&#x27;`</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 2 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Your implementation is correct and matches the examples.</p></div><pre class="lang-python"><code>def circular_shift(x: str, shift: int) -&gt; str:
+    if not x:
+        return x
+    if shift &gt; len(x):
+        return x[::-1]
+    shift %= len(x)
+    return x[-shift:] + x[:-shift]
+</code></pre><div class="text"><p>A small subtlety: the special rule `shift &gt; len(x) -&gt; reversed` overrides normal rotation, and your code handles that properly.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 3 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Exactly — that special-case override is the key detail, and the implementation handles it correctly.</p><p>If you want, I can also provide a version with a bit more defensive handling for negative shifts, but for the stated problem this is sufficient.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 4 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Agreed. For the stated problem, this solution is sufficient and correct.</p></div><pre class="lang-python"><code>def circular_shift(x: str, shift: int) -&gt; str:
+    if not x:
+        return x
+    if shift &gt; len(x):
+        return x[::-1]
+    shift %= len(x)
+    return x[-shift:] + x[:-shift]
+</code></pre><div class="text"><p>If negative shifts are ever introduced, that would need a separate specification.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 5 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><pre class="lang-python"><code>def circular_shift(x: str, shift: int) -&gt; str:
+    if not x:
+        return x
+    if shift &gt; len(x):
+        return x[::-1]
+    shift %= len(x)
+    return x[-shift:] + x[:-shift]
+</code></pre></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 6 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Yes — that is a correct solution for the stated examples and rule.</p></div><pre class="lang-python"><code>def circular_shift(x: str, shift: int) -&gt; str:
+    if not x:
+        return x
+    if shift &gt; len(x):
+        return x[::-1]
+    shift %= len(x)
+    return x[-shift:] + x[:-shift]
+</code></pre><div class="text"><p>It:<br>- returns the reversed string when `shift &gt; len(x)`,<br>- otherwise performs a standard right circular shift,<br>- and handles empty input safely.</p></div></div>
+              </div>
+            </div>
+            </div>
+              
+    <div class="reward-banner reward-pass">
+      <div class="phase-label">Outcome</div>
+      <div class="reward-body"><div class="text"><p>Problem HumanEval/65 — SUCCESS<br>Leader: code_expert (+1.5)<br>Follower: sql_expert (+1.0)<br>Cumulative scores — code_expert: 4.5, sql_expert: 3.0</p><p>Reward rules reminder: success → both +1.0, leader +0.5 extra; failure → leader -0.5, follower 0.0.</p></div></div>
+    </div>
+    
+            </section>
+            
+            <section class="problem-block">
+              <div class="problem-header">
+                <span class="problem-num">Problem 4</span>
+                <span class="problem-tag task-sql">SQL</span>
+                <span class="problem-id">spider_hard_01</span>
+                <span class="problem-leader">Leader: SQL Expert (S)</span>
+              </div>
+              <div class="problem-statement">
+                <div class="phase-label">Problem statement</div>
+                <div class="text"><p>You will now work on a different type of problem. Your full conversation history is preserved. Here is the next problem:</p><p>Problem (spider_hard_01):</p><p>Database schema (SQLite):</p><p>Table Highschooler(ID, name, grade)<br>Table Friend(student_id, friend_id)<br>Table Likes(student_id, liked_id)</p><p>Question: Find the names of students who have at least 2 friends and also have at least 1 person they like. Return each qualifying student&#x27;s name.</p></div>
+              </div>
+              <div class="phase-label">Pitches</div><div class="pitch-row">
+            <div class="pitch-card code">
+              <div class="pitch-header">Code Expert (C)</div>
+              <div class="pitch-body"><div class="text"><p>PITCH<br>I should lead this one because it’s a straightforward SQL aggregation and join problem, and I can produce a correct query with careful handling of duplicate rows and qualifying conditions. My approach is to join `Highschooler` to `Friend` and `Likes`, aggregate by student, and use `COUNT(DISTINCT ...)` to ensure we’re counting unique friends and liked people rather than duplicate records. The main risk is accidentally double-counting due to the many-to-many structure or using the wrong join direction, so I’d structure the query to filter students who meet both thresholds and then return their names.</p></div></div>
+            </div>
+            
+            <div class="pitch-card sql">
+              <div class="pitch-header">SQL Expert (S)</div>
+              <div class="pitch-body"><div class="text"><p>PITCH<br>I should lead this one because it’s a classic SQL aggregation/join problem in my primary domain, and I can produce a correct, concise query with careful handling of duplicate rows. My approach is to join `Highschooler` to `Friend` and `Likes`, then use grouping with `HAVING` to enforce both conditions: at least 2 friends and at least 1 liked person. The main risk is accidentally overcounting due to joins, so I’d use `COUNT(DISTINCT ...)` where appropriate to avoid multiplicative effects from combining the two relationships. I’ll also ensure the result returns each qualifying student’s name once.</p></div></div>
+            </div>
+            </div>
+              
+    <div class="selection-banner">
+      <div class="phase-label">Leader selected</div>
+      <div class="selection-body"><div class="text"><p>Moderator selection for spider_hard_01:<br>LEADER: sql_expert<br>sql_expert shows stronger domain fit and a more cautious, precise plan for avoiding join-induced overcounting on this SQL aggregation problem.</p><p>sql_expert will open the discussion. code_expert follows.<br>Leader earns +0.5 extra on team success but -0.5 on team failure.</p></div></div>
+    </div>
+    
+              <div class="phase-label">Discussion</div><div class="chat-thread">
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 1 · SQL Expert (S) (leader)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Here is a correct SQL solution:</p></div><pre class="lang-sql"><code>SELECT h.name
+FROM Highschooler h
+JOIN Friend f
+  ON h.ID = f.student_id
+JOIN Likes l
+  ON h.ID = l.student_id
+GROUP BY h.ID, h.name
+HAVING COUNT(DISTINCT f.friend_id) &gt;= 2
+   AND COUNT(DISTINCT l.liked_id) &gt;= 1;
+</code></pre><div class="text"><p>Why this works:<br>- `Friend` rows give the student’s friends.<br>- `Likes` rows give the people the student likes.<br>- Grouping by the student lets us count both relationships per student.<br>- `COUNT(DISTINCT ...)` avoids overcounting if there are duplicate rows or join multiplication.<br>- The `HAVING` clause enforces:<br>  - at least 2 friends<br>  - at least 1 liked person</p><p>If you want, I can also provide a version using correlated subqueries, which is often even safer for avoiding join multiplication.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 2 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Your query is close, but there’s a subtle issue: joining `Friend` and `Likes` together can still create a multiplicative effect before aggregation, and while `COUNT(DISTINCT ...)` helps, it’s more robust to avoid the cross-product entirely.</p><p>A cleaner solution is to use correlated `EXISTS` / subqueries:</p></div><pre class="lang-sql"><code>SELECT h.name
+FROM Highschooler h
+WHERE (
+    SELECT COUNT(DISTINCT f.friend_id)
+    FROM Friend f
+    WHERE f.student_id = h.ID
+) &gt;= 2
+AND EXISTS (
+    SELECT 1
+    FROM Likes l
+    WHERE l.student_id = h.ID
+);
+</code></pre><div class="text"><p>Why this is better:<br>- The friend count is computed independently, so no join multiplication.<br>- `EXISTS` checks that the student likes at least one person.<br>- Each qualifying student appears once.</p><p>If you prefer a pure aggregation solution, this is also valid and avoids multiplication by aggregating separately first:</p></div><pre class="lang-sql"><code>SELECT h.name
+FROM Highschooler h
+JOIN (
+    SELECT student_id
+    FROM Friend
+    GROUP BY student_id
+    HAVING COUNT(DISTINCT friend_id) &gt;= 2
+) f ON h.ID = f.student_id
+JOIN (
+    SELECT student_id
+    FROM Likes
+    GROUP BY student_id
+    HAVING COUNT(DISTINCT liked_id) &gt;= 1
+) l ON h.ID = l.student_id;
+</code></pre><div class="text"><p>This version is especially safe and easy to reason about.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 3 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>You’re right to point out the join-multiplication risk. The most robust solution is to aggregate each relationship separately and then join the qualifying students.</p></div><pre class="lang-sql"><code>SELECT h.name
+FROM Highschooler h
+JOIN (
+    SELECT student_id
+    FROM Friend
+    GROUP BY student_id
+    HAVING COUNT(DISTINCT friend_id) &gt;= 2
+) f ON h.ID = f.student_id
+JOIN (
+    SELECT student_id
+    FROM Likes
+    GROUP BY student_id
+    HAVING COUNT(DISTINCT liked_id) &gt;= 1
+) l ON h.ID = l.student_id;
+</code></pre><div class="text"><p>This works because:<br>- The `Friend` subquery finds students with at least 2 distinct friends.<br>- The `Likes` subquery finds students with at least 1 liked person.<br>- Joining those result sets with `Highschooler` returns each qualifying student’s name once.</p><p>Your `EXISTS` version is also correct and even simpler:</p></div><pre class="lang-sql"><code>SELECT h.name
+FROM Highschooler h
+WHERE (
+    SELECT COUNT(DISTINCT f.friend_id)
+    FROM Friend f
+    WHERE f.student_id = h.ID
+) &gt;= 2
+AND EXISTS (
+    SELECT 1
+    FROM Likes l
+    WHERE l.student_id = h.ID
+);
+</code></pre><div class="text"><p>Either is valid, but the separated-aggregation join is a very clean choice here.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 4 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><pre class="lang-sql"><code>SELECT h.name
+FROM Highschooler h
+JOIN (
+    SELECT student_id
+    FROM Friend
+    GROUP BY student_id
+    HAVING COUNT(DISTINCT friend_id) &gt;= 2
+) f ON h.ID = f.student_id
+JOIN (
+    SELECT student_id
+    FROM Likes
+    GROUP BY student_id
+    HAVING COUNT(DISTINCT liked_id) &gt;= 1
+) l ON h.ID = l.student_id;
+</code></pre></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 5 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Yes — that SQL is correct for the question.</p></div><pre class="lang-sql"><code>SELECT h.name
+FROM Highschooler h
+JOIN (
+    SELECT student_id
+    FROM Friend
+    GROUP BY student_id
+    HAVING COUNT(DISTINCT friend_id) &gt;= 2
+) f ON h.ID = f.student_id
+JOIN (
+    SELECT student_id
+    FROM Likes
+    GROUP BY student_id
+    HAVING COUNT(DISTINCT liked_id) &gt;= 1
+) l ON h.ID = l.student_id;
+</code></pre><div class="text"><p>It returns the names of students who:<br>- have at least 2 friends, and<br>- have at least 1 person they like.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 6 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><pre class="lang-sql"><code>SELECT h.name
+FROM Highschooler h
+JOIN (
+    SELECT student_id
+    FROM Friend
+    GROUP BY student_id
+    HAVING COUNT(DISTINCT friend_id) &gt;= 2
+) f ON h.ID = f.student_id
+JOIN (
+    SELECT student_id
+    FROM Likes
+    GROUP BY student_id
+    HAVING COUNT(DISTINCT liked_id) &gt;= 1
+) l ON h.ID = l.student_id;
+</code></pre></div>
+              </div>
+            </div>
+            </div>
+              
+    <div class="reward-banner reward-pass">
+      <div class="phase-label">Outcome</div>
+      <div class="reward-body"><div class="text"><p>Problem spider_hard_01 — SUCCESS<br>Leader: sql_expert (+1.5)<br>Follower: code_expert (+1.0)<br>Cumulative scores — code_expert: 5.5, sql_expert: 4.5</p><p>Reward rules reminder: success → both +1.0, leader +0.5 extra; failure → leader -0.5, follower 0.0.</p></div></div>
+    </div>
+    
+            </section>
+            
+            <section class="problem-block">
+              <div class="problem-header">
+                <span class="problem-num">Problem 5</span>
+                <span class="problem-tag task-sql">SQL</span>
+                <span class="problem-id">spider_hard_02</span>
+                <span class="problem-leader">Leader: SQL Expert (S)</span>
+              </div>
+              <div class="problem-statement">
+                <div class="phase-label">Problem statement</div>
+                <div class="text"><p>Problem (spider_hard_02):</p><p>Database schema (SQLite):</p><p>Table employee(Employee_ID, Name, Age, City)<br>Table shop(Shop_ID, Name, Location, District, Number_products, Manager_name)<br>Table hiring(Shop_ID, Employee_ID, Start_year, Is_full_time)<br>Table evaluation(Employee_ID, Year_awarded, Bonus)</p><p>Question: Which shops employ more full-time workers than the average number of full-time workers per shop? Return shop name and full-time employee count.</p></div>
+              </div>
+              <div class="phase-label">Pitches</div><div class="pitch-row">
+            <div class="pitch-card code">
+              <div class="pitch-header">Code Expert (C)</div>
+              <div class="pitch-body"><div class="text"><p>PITCH<br>I should lead this one because it’s a standard SQL aggregation problem, and I can write a correct query that computes per-shop full-time counts and compares them against the average across shops. My approach is to first aggregate `hiring` by `Shop_ID`, counting only rows where `Is_full_time` indicates full-time workers, then compare each shop’s count to the average of those per-shop counts using a subquery or CTE. The main risk is misinterpreting whether the average should be over all shops or only shops with at least one full-time worker, so I’ll be careful to match the natural reading of “average number of full-time workers per shop” across all shops. I’ll also join to `shop` at the end to return the shop name and count.</p></div></div>
+            </div>
+            
+            <div class="pitch-card sql">
+              <div class="pitch-header">SQL Expert (S)</div>
+              <div class="pitch-body"><div class="text"><p>PITCH  <br>I should lead this one because it’s a standard SQL aggregation problem in my primary domain, and I can produce a correct query that carefully computes per-shop full-time counts and compares them against the global average. My approach is to first aggregate full-time workers per shop from `hiring` where `Is_full_time` indicates full-time, then compare each shop’s count to the average of those per-shop counts using a subquery or CTE. The main risk is misinterpreting the average as the average over employees rather than over shops, or accidentally counting non-full-time rows. I’ll make sure the query returns only the shop name and the qualifying full-time employee count.</p></div></div>
+            </div>
+            </div>
+              
+    <div class="selection-banner">
+      <div class="phase-label">Leader selected</div>
+      <div class="selection-body"><div class="text"><p>Moderator selection for spider_hard_02:<br>LEADER: sql_expert<br>sql_expert has the stronger domain fit and a slightly more careful pitch for this SQL aggregation task, making it the safer choice to lead.</p><p>sql_expert will open the discussion. code_expert follows.<br>Leader earns +0.5 extra on team success but -0.5 on team failure.</p></div></div>
+    </div>
+    
+              <div class="phase-label">Discussion</div><div class="chat-thread">
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 1 · SQL Expert (S) (leader)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Here is a correct SQLite query:</p></div><pre class="lang-sql"><code>WITH full_time_counts AS (
+    SELECT Shop_ID, COUNT(*) AS ft_count
+    FROM hiring
+    WHERE Is_full_time = 1
+    GROUP BY Shop_ID
+),
+avg_count AS (
+    SELECT AVG(ft_count) AS avg_ft
+    FROM full_time_counts
+)
+SELECT s.Name, f.ft_count
+FROM shop s
+JOIN full_time_counts f ON s.Shop_ID = f.Shop_ID
+CROSS JOIN avg_count a
+WHERE f.ft_count &gt; a.avg_ft;
+</code></pre><div class="text"><p>Why this works:<br>- `full_time_counts` computes the number of full-time workers per shop.<br>- `avg_count` computes the average of those per-shop counts.<br>- The final query returns shops whose full-time count is greater than that average.</p><p>If you want the average to include shops with zero full-time workers, we should adjust the query, because the version above averages only over shops that have at least one full-time worker.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 2 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Your query is close, but the interpretation of “average number of full-time workers per shop” usually means across **all shops**, including shops with zero full-time workers. Your current `avg_count` only averages shops that appear in `full_time_counts`, which excludes zeros.</p><p>A safer query is:</p></div><pre class="lang-sql"><code>WITH full_time_counts AS (
+    SELECT s.Shop_ID, s.Name, COUNT(h.Employee_ID) AS ft_count
+    FROM shop s
+    LEFT JOIN hiring h
+        ON s.Shop_ID = h.Shop_ID
+       AND h.Is_full_time = 1
+    GROUP BY s.Shop_ID, s.Name
+),
+avg_count AS (
+    SELECT AVG(ft_count) AS avg_ft
+    FROM full_time_counts
+)
+SELECT f.Name, f.ft_count
+FROM full_time_counts f
+CROSS JOIN avg_count a
+WHERE f.ft_count &gt; a.avg_ft;
+</code></pre><div class="text"><p>Why this is better:<br>- `LEFT JOIN` ensures shops with zero full-time workers are included.<br>- `COUNT(h.Employee_ID)` counts only matched full-time employees.<br>- The average is computed over all shops.<br>- The final result returns shop name and count for shops above that average.</p><p>If the dataset guarantees every shop has at least one full-time worker, your version is fine; otherwise this one is more robust.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 3 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>You’re right — the average should be taken over all shops, including those with zero full-time workers.</p><p>A correct version is:</p></div><pre class="lang-sql"><code>WITH full_time_counts AS (
+    SELECT s.Shop_ID, s.Name, COUNT(h.Employee_ID) AS ft_count
+    FROM shop s
+    LEFT JOIN hiring h
+        ON s.Shop_ID = h.Shop_ID
+       AND h.Is_full_time = 1
+    GROUP BY s.Shop_ID, s.Name
+),
+avg_count AS (
+    SELECT AVG(ft_count) AS avg_ft
+    FROM full_time_counts
+)
+SELECT f.Name, f.ft_count
+FROM full_time_counts f
+CROSS JOIN avg_count a
+WHERE f.ft_count &gt; a.avg_ft;
+</code></pre><div class="text"><p>This:<br>- includes shops with zero full-time workers,<br>- computes the average across all shops,<br>- and returns the shop name plus full-time employee count for shops above average.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 4 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><pre class="lang-sql"><code>WITH full_time_counts AS (
+    SELECT s.Shop_ID, s.Name, COUNT(h.Employee_ID) AS ft_count
+    FROM shop s
+    LEFT JOIN hiring h
+        ON s.Shop_ID = h.Shop_ID
+       AND h.Is_full_time = 1
+    GROUP BY s.Shop_ID, s.Name
+),
+avg_count AS (
+    SELECT AVG(ft_count) AS avg_ft
+    FROM full_time_counts
+)
+SELECT f.Name, f.ft_count
+FROM full_time_counts f
+CROSS JOIN avg_count a
+WHERE f.ft_count &gt; a.avg_ft;
+</code></pre></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 5 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Yes — that query is correct for the question.</p></div><pre class="lang-sql"><code>WITH full_time_counts AS (
+    SELECT s.Shop_ID, s.Name, COUNT(h.Employee_ID) AS ft_count
+    FROM shop s
+    LEFT JOIN hiring h
+        ON s.Shop_ID = h.Shop_ID
+       AND h.Is_full_time = 1
+    GROUP BY s.Shop_ID, s.Name
+),
+avg_count AS (
+    SELECT AVG(ft_count) AS avg_ft
+    FROM full_time_counts
+)
+SELECT f.Name, f.ft_count
+FROM full_time_counts f
+CROSS JOIN avg_count a
+WHERE f.ft_count &gt; a.avg_ft;
+</code></pre><div class="text"><p>It includes shops with zero full-time workers and compares each shop’s count against the average over all shops.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 6 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><pre class="lang-sql"><code>WITH full_time_counts AS (
+    SELECT s.Shop_ID, s.Name, COUNT(h.Employee_ID) AS ft_count
+    FROM shop s
+    LEFT JOIN hiring h
+        ON s.Shop_ID = h.Shop_ID
+       AND h.Is_full_time = 1
+    GROUP BY s.Shop_ID, s.Name
+),
+avg_count AS (
+    SELECT AVG(ft_count) AS avg_ft
+    FROM full_time_counts
+)
+SELECT f.Name, f.ft_count
+FROM full_time_counts f
+CROSS JOIN avg_count a
+WHERE f.ft_count &gt; a.avg_ft;
+</code></pre></div>
+              </div>
+            </div>
+            </div>
+              
+    <div class="reward-banner reward-pass">
+      <div class="phase-label">Outcome</div>
+      <div class="reward-body"><div class="text"><p>Problem spider_hard_02 — SUCCESS<br>Leader: sql_expert (+1.5)<br>Follower: code_expert (+1.0)<br>Cumulative scores — code_expert: 6.5, sql_expert: 6.0</p><p>Reward rules reminder: success → both +1.0, leader +0.5 extra; failure → leader -0.5, follower 0.0.</p></div></div>
+    </div>
+    
+            </section>
+            
+            <section class="problem-block">
+              <div class="problem-header">
+                <span class="problem-num">Problem 6</span>
+                <span class="problem-tag task-sql">SQL</span>
+                <span class="problem-id">spider_hard_03</span>
+                <span class="problem-leader">Leader: SQL Expert (S)</span>
+              </div>
+              <div class="problem-statement">
+                <div class="phase-label">Problem statement</div>
+                <div class="text"><p>Problem (spider_hard_03):</p><p>Database schema (SQLite):</p><p>Table Students(student_id, first_name, last_name, email_address, date_first_registered, date_left, other_details)<br>Table Student_Enrolment(student_enrolment_id, student_id, semester_id, degree_program_id, other_details)<br>Table Student_Enrolment_Courses(student_course_id, course_id, student_enrolment_id)<br>Table Courses(course_id, course_name, course_description, other_details)<br>Table Semesters(semester_id, semester_name, semester_description, other_details)</p><p>Question: Find the first name and last name of the student who enrolled in the most courses. If there is a tie, return all tied students.</p></div>
+              </div>
+              <div class="phase-label">Pitches</div><div class="pitch-row">
+            <div class="pitch-card code">
+              <div class="pitch-header">Code Expert (C)</div>
+              <div class="pitch-body"><div class="text"><p>PITCH<br>I should not lead this one because it’s a SQL query over a small relational schema, which is outside my primary Python/algorithm domain and better handled by a SQL-focused collaborator. The right approach is to count courses per student by joining `Students`, `Student_Enrolment`, and `Student_Enrolment_Courses`, then select the student(s) whose count equals the maximum count across all students. The main risk is accidentally counting enrolments instead of courses, or missing ties if the query only returns a single top row. A SQL expert is better positioned to write the safest version with correct grouping and tie handling.</p></div></div>
+            </div>
+            
+            <div class="pitch-card sql">
+              <div class="pitch-header">SQL Expert (S)</div>
+              <div class="pitch-body"><div class="text"><p>PITCH  <br>I should lead this one because it’s a classic SQL aggregation/ranking problem in my primary domain, and I can produce a correct query that handles ties cleanly. My approach is to count distinct courses per student by joining `Students` through `Student_Enrolment` to `Student_Enrolment_Courses`, then compare each student’s count to the maximum count across all students. The main risk is accidentally double-counting courses if the schema allows duplicate enrolment-course rows, so I’d use `COUNT(DISTINCT ...)` to be safe. I’ll make sure the final result returns only first and last name, and includes all students tied for the top count.</p></div></div>
+            </div>
+            </div>
+              
+    <div class="selection-banner">
+      <div class="phase-label">Leader selected</div>
+      <div class="selection-body"><div class="text"><p>Moderator selection for spider_hard_03:<br>LEADER: sql_expert<br>sql_expert shows stronger domain fit and a careful, tie-aware plan for the SQL aggregation, while code_expert appropriately defers on this off-domain problem.</p><p>sql_expert will open the discussion. code_expert follows.<br>Leader earns +0.5 extra on team success but -0.5 on team failure.</p></div></div>
+    </div>
+    
+              <div class="phase-label">Discussion</div><div class="chat-thread">
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 1 · SQL Expert (S) (leader)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Here is a correct solution:</p></div><pre class="lang-sql"><code>WITH course_counts AS (
+    SELECT s.student_id, s.first_name, s.last_name,
+           COUNT(DISTINCT sec.course_id) AS course_count
+    FROM Students s
+    JOIN Student_Enrolment se
+      ON s.student_id = se.student_id
+    JOIN Student_Enrolment_Courses sec
+      ON se.student_enrolment_id = sec.student_enrolment_id
+    GROUP BY s.student_id, s.first_name, s.last_name
+),
+max_count AS (
+    SELECT MAX(course_count) AS mx
+    FROM course_counts
+)
+SELECT first_name, last_name
+FROM course_counts
+WHERE course_count = (SELECT mx FROM max_count);
+</code></pre><div class="text"><p>Why this works:<br>- `course_counts` computes the number of distinct courses per student.<br>- `max_count` finds the highest course count among all students.<br>- The final query returns every student whose count equals that maximum, so ties are included.</p><p>If you want, I can also provide a shorter version without the extra CTE for the maximum.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 2 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Your query is correct, and it handles ties properly.</p><p>A slightly simpler equivalent is:</p></div><pre class="lang-sql"><code>WITH course_counts AS (
+    SELECT s.student_id, s.first_name, s.last_name,
+           COUNT(DISTINCT sec.course_id) AS course_count
+    FROM Students s
+    JOIN Student_Enrolment se
+      ON s.student_id = se.student_id
+    JOIN Student_Enrolment_Courses sec
+      ON se.student_enrolment_id = sec.student_enrolment_id
+    GROUP BY s.student_id, s.first_name, s.last_name
+)
+SELECT first_name, last_name
+FROM course_counts
+WHERE course_count = (
+    SELECT MAX(course_count)
+    FROM course_counts
+);
+</code></pre><div class="text"><p>This returns the first and last name of the student(s) enrolled in the most courses, including ties.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 3 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Yes — that simplified version is correct.</p></div><pre class="lang-sql"><code>WITH course_counts AS (
+    SELECT s.student_id, s.first_name, s.last_name,
+           COUNT(DISTINCT sec.course_id) AS course_count
+    FROM Students s
+    JOIN Student_Enrolment se
+      ON s.student_id = se.student_id
+    JOIN Student_Enrolment_Courses sec
+      ON se.student_enrolment_id = sec.student_enrolment_id
+    GROUP BY s.student_id, s.first_name, s.last_name
+)
+SELECT first_name, last_name
+FROM course_counts
+WHERE course_count = (
+    SELECT MAX(course_count)
+    FROM course_counts
+);
+</code></pre><div class="text"><p>It returns the first and last name of the student(s) enrolled in the most courses, including all ties.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 4 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><pre class="lang-sql"><code>WITH course_counts AS (
+    SELECT s.student_id, s.first_name, s.last_name,
+           COUNT(DISTINCT sec.course_id) AS course_count
+    FROM Students s
+    JOIN Student_Enrolment se
+      ON s.student_id = se.student_id
+    JOIN Student_Enrolment_Courses sec
+      ON se.student_enrolment_id = sec.student_enrolment_id
+    GROUP BY s.student_id, s.first_name, s.last_name
+)
+SELECT first_name, last_name
+FROM course_counts
+WHERE course_count = (
+    SELECT MAX(course_count)
+    FROM course_counts
+);
+</code></pre></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row sql">
+              <div class="bubble sql">
+                <div class="bubble-meta">
+                  Turn 5 · SQL Expert (S)
+                </div>
+                <div class="bubble-content"><div class="text"><p>Yes — that SQL is correct.</p></div><pre class="lang-sql"><code>WITH course_counts AS (
+    SELECT s.student_id, s.first_name, s.last_name,
+           COUNT(DISTINCT sec.course_id) AS course_count
+    FROM Students s
+    JOIN Student_Enrolment se
+      ON s.student_id = se.student_id
+    JOIN Student_Enrolment_Courses sec
+      ON se.student_enrolment_id = sec.student_enrolment_id
+    GROUP BY s.student_id, s.first_name, s.last_name
+)
+SELECT first_name, last_name
+FROM course_counts
+WHERE course_count = (
+    SELECT MAX(course_count)
+    FROM course_counts
+);
+</code></pre><div class="text"><p>It returns the first and last name of the student(s) with the highest course count, including ties.</p></div></div>
+              </div>
+            </div>
+            
+            <div class="bubble-row code">
+              <div class="bubble code">
+                <div class="bubble-meta">
+                  Turn 6 · Code Expert (C)
+                </div>
+                <div class="bubble-content"><pre class="lang-sql"><code>WITH course_counts AS (
+    SELECT s.student_id, s.first_name, s.last_name,
+           COUNT(DISTINCT sec.course_id) AS course_count
+    FROM Students s
+    JOIN Student_Enrolment se
+      ON s.student_id = se.student_id
+    JOIN Student_Enrolment_Courses sec
+      ON se.student_enrolment_id = sec.student_enrolment_id
+    GROUP BY s.student_id, s.first_name, s.last_name
+)
+SELECT first_name, last_name
+FROM course_counts
+WHERE course_count = (
+    SELECT MAX(course_count)
+    FROM course_counts
+);
+</code></pre></div>
+              </div>
+            </div>
+            </div>
+              
+    <div class="reward-banner reward-pass">
+      <div class="phase-label">Outcome</div>
+      <div class="reward-body"><div class="text"><p>Problem spider_hard_03 — SUCCESS<br>Leader: sql_expert (+1.5)<br>Follower: code_expert (+1.0)<br>Cumulative scores — code_expert: 7.5, sql_expert: 7.5</p><p>Reward rules reminder: success → both +1.0, leader +0.5 extra; failure → leader -0.5, follower 0.0.</p></div></div>
+    </div>
+    
+            </section>
+            
+  </div>
+</body>
+</html>
